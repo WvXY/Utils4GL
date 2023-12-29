@@ -190,10 +190,6 @@ int main()
   glOrtho(0.0, 1.0, 0.0, 1.0, 0.0, 1.0); // this creates a canvas you can do 2D drawing on
   unsigned int VAO, VBO, EBO;
 
-//  size_t size_verts = sizeof(vertices);
-//  size_t size_indices = sizeof(indices);
-//  setup_buffers(*vertices, *indices, size_verts, size_indices, VAO);
-
   // render loop
   while (!glfwWindowShouldClose(window))
   {
@@ -205,7 +201,7 @@ int main()
     setup_buffers(*vertices, *indices, size_verts, size_indices, VAO);
     glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
