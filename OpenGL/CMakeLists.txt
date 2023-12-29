@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(OpenGL_Demo)
+project(OpenGLDemo)
 
 set(CMAKE_CXX_STANDARD 23)
 

@@ -3,7 +3,6 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <gl/GL.h>
 
 // window settings
 const unsigned int SCR_WIDTH = 800;
