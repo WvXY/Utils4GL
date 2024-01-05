@@ -55,8 +55,8 @@ GLFWwindow* init_glfw() {
   }
 
   glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); // opengl 3.X
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6); // opengl x.3
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
   glfwWindowHint(GLFW_SAMPLES, 4); // anti-aliasing
@@ -132,7 +132,8 @@ unsigned int create_program(unsigned int &vertexShader, unsigned int &fragmentSh
   return shaderProgram;
 }
 
-void setup_buffers(float &verts, unsigned int &indices, size_t size_verts, size_t size_indices,
+void setup_buffers(float &verts, unsigned int &indices,
+                   size_t size_verts, size_t size_indices,
                    unsigned int &VAO) {
   unsigned int VBO, EBO;
   glGenVertexArrays(1, &VAO);
@@ -187,7 +188,7 @@ int main()
   glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(0.0, 1.0, 0.0, 1.0, 0.0, 1.0); // this creates a canvas you can do 2D drawing on
+  glOrtho(0.0, 1.0, 0.0, 1.0, 0.0, 1.0); 
   unsigned int VAO, VBO, EBO;
 
   // render loop
