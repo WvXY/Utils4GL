@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.6)
 project(OpenGLDemo)
 
 set(CMAKE_CXX_STANDARD 23)
@@ -18,7 +18,6 @@ find_package(OpenGL REQUIRED)
 add_executable(${PROJECT_NAME}
 #        demo_legacy.cpp
 #        demo_modern.cpp
-#        example.cpp
         gl_utils.cpp
         gl_utils.hpp
         main.cpp

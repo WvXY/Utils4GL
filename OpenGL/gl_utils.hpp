@@ -1,57 +1,49 @@
 #pragma once
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
-//#include <glad/glad.h>
+
 #include <iostream>
 #include <string>
 
+namespace wvxy {
 
 class GlUtils {
-public:
-    GlUtils(float verts[], unsigned int indices[]);
-    ~GlUtils() = default;
+  public:
+    GlUtils(int screen_width, int screen_height);
+    ~GlUtils();
+    GlUtils(const GlUtils&) = delete;
+    GlUtils& operator=(const GlUtils&) = delete;
 
-    GlUtils(const GlUtils &) = delete;
-    GlUtils &operator=(const GlUtils &) = delete;
+    int SCR_WIDTH = 800;
+    int SCR_HEIGHT = 600;
+    GLFWwindow* window;
 
-    unsigned int SCR_WIDTH = 800;
-    unsigned int SCR_HEIGHT = 600;
+    void Draw(float* vertices, unsigned int* indices, size_t size_verts,
+              size_t size_indices);
 
-    void render_loop(GLFWwindow *window, unsigned int &shaderProgram,
-                     float &verts, unsigned int &indices,
-                     size_t size_verts, size_t size_indices );
+    void Run();
 
-private:
-    size_t size_verts;
-    size_t size_indices;
+  private:
     unsigned int VBO, VAO, EBO;
+    std::string vertexShaderSource;
+    std::string fragmentShaderSource;
     unsigned int shaderProgram;
 
-    GLFWwindow *window;
-    GLFWwindow *InitGLFW();
+    void Init();
+    GLFWwindow* InitGLFW();
     void InitGLAD();
     void InitViewport();
-    unsigned int CompileShader(std::string &source, int type);
-    unsigned int CreateProgram(unsigned int vertexShader, unsigned int fragmentShader);
-    void CreateBuffer(
-            float &verts, unsigned int &indices,
-            size_t size_verts, size_t size_indices,
-            unsigned int &VAO);
+
+    std::string ReadShaderSource(const std::string path);
+    unsigned int CompileShader(std::string& source, int type);
+    unsigned int CreateProgram(unsigned int vertexShader,
+                               unsigned int fragmentShader);
+
+    void CreateBuffer(float& verts, unsigned int& indices, size_t size_verts,
+                      size_t size_indices);
+    void BindBuffer();
 
 
-    std::string vertexShaderSource =
-            "#version 460\n"
-            "in vec3 aPos;\n"
-            "void main()\n"
-            "{\n"
-            "   gl_Position = vec4(aPos, 1.0);\n"
-            "}\n";
-
-    std::string fragmentShaderSource =
-            "#version 460\n"
-            "out vec4 FragColor;\n"
-            "void main()\n"
-            "{\n"
-            "  FragColor = vec4(0.0f, 1.f, 0.f, 1.0f);\n"
-            "}\n";
 };
+} // namespace wvxy
