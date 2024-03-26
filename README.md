@@ -1,2 +1,1 @@
-# cpp-utility
-My utility functions for C++
+# Utility Library for C++
