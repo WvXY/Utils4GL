@@ -1,4 +1,3 @@
-
 #version 460
 in vec3 aPos;
 void main()

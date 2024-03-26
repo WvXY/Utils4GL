@@ -5,45 +5,50 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+
+#include "global_alias.h"
 
 namespace wvxy {
 
 class GlUtils {
-  public:
-    GlUtils(int screen_width, int screen_height);
-    ~GlUtils();
-    GlUtils(const GlUtils&) = delete;
-    GlUtils& operator=(const GlUtils&) = delete;
+ public:
+  GlUtils(int screen_width, int screen_height);
+  ~GlUtils();
+  GlUtils(const GlUtils&) = delete;
+  GlUtils& operator=(const GlUtils&) = delete;
 
-    int SCR_WIDTH = 800;
-    int SCR_HEIGHT = 600;
-    GLFWwindow* window;
+  int SCR_WIDTH = 800;
+  int SCR_HEIGHT = 600;
+  GLFWwindow* window;
 
-    void Draw(float* vertices, unsigned int* indices, size_t size_verts,
-              size_t size_indices);
+  void Draw(std::vector<vec2>& vertices, std::vector<vec3>& colors,
+            std::vector<vec3i>& indices);
 
-    void Run();
+  void virtual Run();
 
-  private:
-    unsigned int VBO, VAO, EBO;
-    std::string vertexShaderSource;
-    std::string fragmentShaderSource;
-    unsigned int shaderProgram;
+ private:
+  unsigned int VBO;
+  unsigned int VAO;
+  unsigned int EBO;
+  unsigned int CBO;
 
-    void Init();
-    GLFWwindow* InitGLFW();
-    void InitGLAD();
-    void InitViewport();
+  std::string vertexShaderSource;
+  std::string fragmentShaderSource;
+  unsigned int shaderProgram;
 
-    std::string ReadShaderSource(const std::string path);
-    unsigned int CompileShader(std::string& source, int type);
-    unsigned int CreateProgram(unsigned int vertexShader,
-                               unsigned int fragmentShader);
+  void Init();
+  GLFWwindow* InitGLFW();
+  void InitGLAD();
+  void InitViewport();
 
-    void CreateBuffer(float& verts, unsigned int& indices, size_t size_verts,
-                      size_t size_indices);
-    void BindBuffer();
+  std::string ReadShaderSource(const std::string path);
+  unsigned int CompileShader(std::string& source, int type);
+  unsigned int CreateProgram(unsigned int vertexShader,
+                             unsigned int fragmentShader);
 
-
+  void CreateBuffer(std::vector<vec2>& vertices, std::vector<vec3>& colors,
+                    std::vector<vec3i>& indices);
+  void BindBuffer();
 };
-} // namespace wvxy
+}  // namespace wvxy
