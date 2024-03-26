@@ -32,7 +32,7 @@ int main() {
     frame_count++;
 
     if (frame_count % 100 == 0) {
-      std::cout << "Frame Time = " << frame_time << '\t' << "\t";
+      std::cout << "Frame Time = " << frame_time.count() << '\t' << "\t";
       std::cout << "FPS" << 1.f / frame_time.count() << '\n';
     }
   }
