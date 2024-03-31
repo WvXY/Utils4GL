@@ -9,7 +9,7 @@
 namespace wvxy {
 
 GlUtils::GlUtils(int screen_width, int screen_height)
-    : SCR_WIDTH(screen_width), SCR_HEIGHT(screen_width) {
+    : SCR_WIDTH(screen_width), SCR_HEIGHT(screen_height) {
   Init();
 }
 
@@ -140,42 +140,34 @@ void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
   glGenBuffers(1, &EBO);
 
   glBindVertexArray(VAO);
+
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec2),
-               vertices.data(),  // Pass pointer to vertex data
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec2), vertices.data(),
                GL_STATIC_DRAW);
-
-  // Bind and fill color buffer
-  glBindBuffer(GL_ARRAY_BUFFER, CBO);
-  glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(vec3), colors.data(),
-               GL_STATIC_DRAW);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(vec3i),
-               indices.data(),  // Pass pointer to index data
-               GL_STATIC_DRAW);
-
-  // Specify vertex attribute pointers
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(vec2), (void*)0);
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)0);
+  glBindBuffer(GL_ARRAY_BUFFER, CBO);
+  glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(vec3), colors.data(),
+               GL_STATIC_DRAW);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)0);
   glEnableVertexAttribArray(1);
+
+//  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+//  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(vec3i),
+//           indices.data(), GL_STATIC_DRAW);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 }
 
-void GlUtils::BindBuffer() {
-  glUseProgram(shaderProgram);
-  glBindVertexArray(VAO);
-}
-
 void GlUtils::Draw(std::vector<vec2>& vertices, std::vector<vec3>& colors,
                    std::vector<vec3i>& indices) {
   CreateBuffer(vertices, colors, indices);
-  BindBuffer();
-  glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+  glUseProgram(shaderProgram); // Use the shader program
+  glBindVertexArray(VAO); // Bind the Vertex Array Object
+  glDrawArrays(GL_TRIANGLES, 0, vertices.size()); // Draw the triangle
+  glBindVertexArray(0); // Unbind the VAO (not strictly necessary)
 }
 
 void GlUtils::Run() {

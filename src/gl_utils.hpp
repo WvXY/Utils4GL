@@ -37,6 +37,8 @@ class GlUtils {
   std::string fragmentShaderSource;
   GLuint shaderProgram;
 
+  //  GLSLSHADER* shader;
+
   void Init();
   GLFWwindow* InitGLFW();
   void InitGLAD();

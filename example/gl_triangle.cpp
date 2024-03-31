@@ -6,23 +6,33 @@
 #include "gl_utils.hpp"
 
 int main() {
-  std::vector<vec2> vertices = {{0.5f, 0.5f}, {0.5f, -0.5f}, {-0.5f, -0.5f}};
-  std::vector<vec3> colors = {{1.f, 0.f, 0.f}, {0.f, 1.f, 0.f}, {0.f, 0.f, 1.f}};
+  std::vector<vec2> vertices = {
+      vec2(-0.5f, -0.5f), // Vertex 1
+      vec2(0.5f, -0.5f),  // Vertex 2
+      vec2(0.0f, 0.5f)    // Vertex 3
+  };
+
+  std::vector<vec3> colors = {
+      vec3(1.0f, 0.0f, 0.0f), // Color for Vertex 1 (Red)
+      vec3(0.0f, 1.0f, 0.0f), // Color for Vertex 2 (Green)
+      vec3(0.0f, 0.0f, 1.0f)  // Color for Vertex 3 (Blue)
+  };
   std::vector<vec3i> indices = {{0, 1, 2}};
 
   // initialize
   auto t0{std::chrono::high_resolution_clock::now()};
   size_t frame_count{0};
 
-  wvxy::GlUtils gl_utils{600, 800};
+  wvxy::GlUtils gl_utils{800, 800};
+  auto window = gl_utils.window;
 
-  while (!glfwWindowShouldClose(gl_utils.window)) {
-    glClearColor(0.2f, 0.3f, 0.3f, 1.f);
+  while (!glfwWindowShouldClose(window)) {
+    glClearColor(0.1f, 0.2f, 0.3f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     gl_utils.Draw(vertices, colors, indices);
 
-    glfwSwapBuffers(gl_utils.window);
+    glfwSwapBuffers(window);
     glfwPollEvents();
 
     // frame time
