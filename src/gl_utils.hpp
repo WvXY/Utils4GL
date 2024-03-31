@@ -28,14 +28,14 @@ class GlUtils {
   void virtual Run();
 
  private:
-  unsigned int VBO;
-  unsigned int VAO;
-  unsigned int EBO;
-  unsigned int CBO;
+  GLuint VBO;
+  GLuint VAO;
+  GLuint EBO;
+  GLuint CBO;
 
   std::string vertexShaderSource;
   std::string fragmentShaderSource;
-  unsigned int shaderProgram;
+  GLuint shaderProgram;
 
   void Init();
   GLFWwindow* InitGLFW();
@@ -43,9 +43,8 @@ class GlUtils {
   void InitViewport();
 
   std::string ReadShaderSource(const std::string path);
-  unsigned int CompileShader(std::string& source, int type);
-  unsigned int CreateProgram(unsigned int vertexShader,
-                             unsigned int fragmentShader);
+  GLuint CompileShader(std::string& source, int type);
+  GLuint CreateProgram(GLuint vertexShader, GLuint fragmentShader);
 
   void CreateBuffer(std::vector<vec2>& vertices, std::vector<vec3>& colors,
                     std::vector<vec3i>& indices);
