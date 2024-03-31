@@ -13,7 +13,8 @@ namespace wvxy {
 
 class GlUtils {
  public:
-  GlUtils(int screen_width, int screen_height);
+  GlUtils(int screen_width, int screen_height,
+          std::string windowName = "OpenGL Window");
   ~GlUtils();
   GlUtils(const GlUtils&) = delete;
   GlUtils& operator=(const GlUtils&) = delete;
@@ -22,27 +23,27 @@ class GlUtils {
   int SCR_HEIGHT = 600;
   GLFWwindow* window;
 
-  void Draw(std::vector<vec2>& vertices, std::vector<vec3>& colors,
-            std::vector<vec3i>& indices);
+  void Draw(std::vector<vec2> vertices, std::vector<vec3> colors,
+            std::vector<vec3i> indices = {});
 
   void virtual Run();
 
  private:
-  GLuint VBO;
-  GLuint VAO;
-  GLuint EBO;
-  GLuint CBO;
+  void Init();
+  GLFWwindow* InitGLFW();
+  void InitGLAD();
+  void InitViewport();
+
+  std::string windowName;
+
+  // TODO: refactor to a class for shaders
+  GLuint VBO, VAO, EBO, CBO;
 
   std::string vertexShaderSource;
   std::string fragmentShaderSource;
   GLuint vertexShader;
   GLuint fragmentShader;
   GLuint program;
-
-  void Init();
-  GLFWwindow* InitGLFW();
-  void InitGLAD();
-  void InitViewport();
 
   std::string ReadShaderSource(const std::string path);
   void CompileShader(std::string& source, GLuint& target, GLenum type);
@@ -51,5 +52,6 @@ class GlUtils {
 
   void CreateBuffer(std::vector<vec2>& vertices, std::vector<vec3>& colors,
                     std::vector<vec3i>& indices);
+  void CreateBuffer(std::vector<vec2>& vertices, std::vector<vec3>& colors);
 };
 }  // namespace wvxy

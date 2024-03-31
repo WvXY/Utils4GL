@@ -4,4 +4,5 @@ Language: Cpp
 Standard: Latest
 IndentWidth: 2
 PointerAlignment: Left
+SortIncludes: Never
 ...

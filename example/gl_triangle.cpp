@@ -1,31 +1,28 @@
 #include <chrono>
 #include <iostream>
-#include <vector>
 #include <memory>
+#include <vector>
 
-#include "global_alias.h"
 #include "gl_utils.hpp"
+#include "global_alias.h"
 
 int main() {
   std::vector<vec2> vertices = {
-      vec2(-0.5f, -0.5f), // Vertex 1
-      vec2(0.5f, -0.5f),  // Vertex 2
-      vec2(0.0f, 0.5f)    // Vertex 3
-  };
+      {0.0f, 0.5f}, {0.5f, -0.5f}, {-0.5f, -0.5f}, {0.2f, 0.4f}};
 
-  std::vector<vec3> colors = {
-      vec3(1.0f, 1.0f, 0.0f),
-      vec3(0.0f, 1.0f, 1.0f),
-      vec3(0.0f, 0.0f, 1.0f)
-  };
-  std::vector<vec3i> indices = {{0, 1, 2}};
+  std::vector<vec3> colors = {{1.0f, 1.0f, 0.0f},
+                              {0.0f, 1.0f, 1.0f},
+                              {0.0f, 0.0f, 1.0f},
+                              {1.0f, 0.0f, 1.0f}};
+
+  std::vector<vec3i> indices = {{0, 1, 2}, {0, 1, 3}};
 
   // initialize
   auto t0{std::chrono::high_resolution_clock::now()};
   size_t frame_count{0};
 
-//  wvxy::GlUtils gl_utils{800, 800};
-  auto gl_utils = std::make_shared<wvxy::GlUtils>(800, 800);
+//    wvxy::GlUtils gl_utils{800, 800};
+  auto gl_utils = std::make_unique<wvxy::GlUtils>(800, 800, "Triangle");
 
   auto* window = gl_utils->window;
 

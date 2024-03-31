@@ -8,8 +8,10 @@
 
 namespace wvxy {
 
-GlUtils::GlUtils(int screen_width, int screen_height)
-    : SCR_WIDTH(screen_width), SCR_HEIGHT(screen_height) {
+GlUtils::GlUtils(int screen_width, int screen_height, std::string window_name)
+    : SCR_WIDTH(screen_width),
+      SCR_HEIGHT(screen_height),
+      windowName(window_name) {
   Init();
 }
 
@@ -55,8 +57,9 @@ GLFWwindow* GlUtils::InitGLFW() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);  // opengl x.6
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Window", NULL, NULL);
-  if (window == NULL) {
+  window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, windowName.c_str(), nullptr,
+                            nullptr);
+  if (window == nullptr) {
     std::cout << stderr << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
     exit(EXIT_FAILURE);
@@ -110,7 +113,8 @@ void GlUtils::CompileShader(std::string& source, GLuint& target, GLenum type) {
   }
 }
 
-void GlUtils::CreateProgram(GLuint& program, GLuint& vertexShader, GLuint& fragmentShader) {
+void GlUtils::CreateProgram(GLuint& program, GLuint& vertexShader,
+                            GLuint& fragmentShader) {
   program = glCreateProgram();
   glAttachShader(program, vertexShader);
   glAttachShader(program, fragmentShader);
@@ -124,10 +128,34 @@ void GlUtils::CreateProgram(GLuint& program, GLuint& vertexShader, GLuint& fragm
     std::cout << stderr << "ERROR::PROGRAM::LINKING_FAILED\n"
               << infoLog << std::endl;
   }
-
-  //  glDeleteShader(vertexShader);
-  //  glDeleteShader(fragmentShader);
 }
+
+// another approach to create buffer
+// void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
+//                           std::vector<vec3>& colors) {
+//  glGenVertexArrays(1, &VAO);
+//  glGenBuffers(1, &VBO);
+//  glGenBuffers(1, &CBO);
+//  glBindVertexArray(VAO);
+//
+//  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+//  glBufferData(GL_ARRAY_BUFFER,
+//               vertices.size() * sizeof(vec2) + colors.size() * sizeof(vec3),
+//               nullptr, GL_STATIC_DRAW);
+//  glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(vec2),
+//                  vertices.data());
+//  glBufferSubData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec2),
+//                  colors.size() * sizeof(vec3), colors.data());
+//
+//  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(vec2), (void*)0);
+//  glEnableVertexAttribArray(0);
+//  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vec3),
+//                        (void*)(vertices.size() * sizeof(vec2)));
+//  glEnableVertexAttribArray(1);
+//
+//  glBindBuffer(GL_ARRAY_BUFFER, 0);
+//  glBindVertexArray(0);
+//}
 
 void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
                            std::vector<vec3>& colors,
@@ -135,46 +163,43 @@ void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &CBO);
-  glGenBuffers(1, &EBO);
 
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER,
-               vertices.size() * sizeof(vec2) + colors.size() * sizeof(vec3),
-               NULL, GL_STATIC_DRAW);
-  glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(vec2),
-                  vertices.data());
-  glBufferSubData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec2),
-                  colors.size() * sizeof(vec3), colors.data());
-
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec2), vertices.data(),
+               GL_STATIC_DRAW);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(vec2), (void*)0);
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vec3),
-                        (void*)(vertices.size() * sizeof(vec2)));
+
+  glBindBuffer(GL_ARRAY_BUFFER, CBO);
+  glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(vec3), colors.data(),
+               GL_STATIC_DRAW);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)0);
   glEnableVertexAttribArray(1);
-  //  glEnableVertexAttribArray(0);
 
-  //  glBindBuffer(GL_ARRAY_BUFFER, CBO);
-  //  glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(vec3), colors.data(),
-  //               GL_STATIC_DRAW);
-  //  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)0);
-  //  glEnableVertexAttribArray(1);
-
-  //  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  //  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(vec3i),
-  //           indices.data(), GL_STATIC_DRAW);
+  if (indices.size() != 0) {
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(vec3i),
+                 indices.data(), GL_STATIC_DRAW);
+  }
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 }
 
-void GlUtils::Draw(std::vector<vec2>& vertices, std::vector<vec3>& colors,
-                   std::vector<vec3i>& indices) {
+void GlUtils::Draw(std::vector<vec2> vertices, std::vector<vec3> colors,
+                   std::vector<vec3i> indices) {
   CreateBuffer(vertices, colors, indices);
   glUseProgram(program);   // Use the shader program
   glBindVertexArray(VAO);  // Bind the Vertex Array Object
-  glDrawArrays(GL_TRIANGLES, 0, 3);  // Draw the triangle
+
+  if (indices.size() == 0)
+    glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size());
+  else
+    glDrawElements(GL_TRIANGLES, indices.size() * 3, GL_UNSIGNED_INT, nullptr);
+
   glBindVertexArray(0);  // Unbind the VAO (not strictly necessary)
 }
 
