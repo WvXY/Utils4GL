@@ -6,7 +6,8 @@ function(copy_shaders)
         file(REMOVE_RECURSE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/shaders")
     endif()
 
-    file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/shaders)
+    # No need to create the directory, file(COPY) will do it without 'sudo' permissions
+    # file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/shaders)
 
     file(COPY "${CMAKE_SOURCE_DIR}/shaders" DESTINATION ${CMAKE_BINARY_DIR})
 
