@@ -18,7 +18,9 @@ GlUtils::~GlUtils() {
   glDeleteBuffers(1, &VBO);
   glDeleteBuffers(1, &EBO);
   glDeleteBuffers(1, &CBO);
-  glDeleteProgram(shaderProgram);
+  glDeleteShader(vertexShader);
+  glDeleteShader(fragmentShader);
+  glDeleteProgram(program);
   glfwTerminate();
 }
 
@@ -27,14 +29,15 @@ void GlUtils::Init() {
   InitGLAD();
   InitViewport();
   glfwSwapInterval(0);  // vsync : 0 off, 1 on
+
   std::filesystem::path p = std::filesystem::current_path().parent_path();
   fragmentShaderSource =
       ReadShaderSource(p.string() + "/shaders/simple_shader.frag");
   vertexShaderSource =
       ReadShaderSource(p.string() + "/shaders/simple_shader.vert");
-  auto vertexShader = CompileShader(vertexShaderSource, GL_VERTEX_SHADER);
-  auto fragmentShader = CompileShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
-  CreateProgram(vertexShader, fragmentShader);
+  CompileShader(vertexShaderSource, vertexShader, GL_VERTEX_SHADER);
+  CompileShader(fragmentShaderSource, fragmentShader, GL_FRAGMENT_SHADER);
+  CreateProgram(program, vertexShader, fragmentShader);
 }
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
@@ -52,8 +55,8 @@ GLFWwindow* GlUtils::InitGLFW() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);  // opengl x.6
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Window", nullptr, nullptr);
-  if (window == nullptr) {
+  window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Window", NULL, NULL);
+  if (window == NULL) {
     std::cout << stderr << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
     exit(EXIT_FAILURE);
@@ -74,44 +77,41 @@ void GlUtils::InitGLAD() {
 
 void GlUtils::InitViewport() { glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT); }
 
+// https://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
 std::string GlUtils::ReadShaderSource(const std::string path) {
-  std::ifstream file{path, std::ios::ate | std::ios::binary};
+  std::ifstream file{path};
 
   if (!file.is_open()) {
     std::cout << "Error: File do not exist or could not open" << std::endl;
     throw std::runtime_error("Could not open file: " + path);
   }
 
-  size_t fileSize = static_cast<size_t>(file.tellg());
-  std::vector<char> buffer(fileSize);
-
-  file.seekg(0);
-  file.read(buffer.data(), fileSize);
-
+  std::stringstream buffer;
+  buffer << file.rdbuf();
   file.close();
-  return buffer.data();
+
+  return buffer.str();
 }
 
-GLuint GlUtils::CompileShader(std::string& source, int type) {
-  GLuint shader = glCreateShader(type);
-  const char* src = source.c_str();
-  glShaderSource(shader, 1, &src, nullptr);
-  glCompileShader(shader);
+void GlUtils::CompileShader(std::string& source, GLuint& target, GLenum type) {
+  target = glCreateShader(type);
+  auto* src = source.c_str();
+  glShaderSource(target, 1, &src, nullptr);
+  glCompileShader(target);
 
   int success;
   char infoLog[512];
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+  glGetShaderiv(target, GL_COMPILE_STATUS, &success);
   if (!success) {
-    glGetShaderInfoLog(shader, 512, nullptr, infoLog);
+    glGetShaderInfoLog(target, 512, nullptr, infoLog);
     std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
-    glDeleteShader(shader);
-    return 0;  // Return 0 to indicate failure
+    glDeleteShader(target);
+    exit(EXIT_FAILURE);
   }
-  return shader;
 }
 
-GLuint GlUtils::CreateProgram(GLuint vertexShader, GLuint fragmentShader) {
-  GLuint program = glCreateProgram();
+void GlUtils::CreateProgram(GLuint& program, GLuint& vertexShader, GLuint& fragmentShader) {
+  program = glCreateProgram();
   glAttachShader(program, vertexShader);
   glAttachShader(program, fragmentShader);
   glLinkProgram(program);
@@ -125,10 +125,8 @@ GLuint GlUtils::CreateProgram(GLuint vertexShader, GLuint fragmentShader) {
               << infoLog << std::endl;
   }
 
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
-
-  return program;
+  //  glDeleteShader(vertexShader);
+  //  glDeleteShader(fragmentShader);
 }
 
 void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
@@ -142,20 +140,30 @@ void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec2), vertices.data(),
-               GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER,
+               vertices.size() * sizeof(vec2) + colors.size() * sizeof(vec3),
+               NULL, GL_STATIC_DRAW);
+  glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(vec2),
+                  vertices.data());
+  glBufferSubData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec2),
+                  colors.size() * sizeof(vec3), colors.data());
+
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(vec2), (void*)0);
   glEnableVertexAttribArray(0);
-
-  glBindBuffer(GL_ARRAY_BUFFER, CBO);
-  glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(vec3), colors.data(),
-               GL_STATIC_DRAW);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vec3),
+                        (void*)(vertices.size() * sizeof(vec2)));
   glEnableVertexAttribArray(1);
+  //  glEnableVertexAttribArray(0);
 
-//  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(vec3i),
-//           indices.data(), GL_STATIC_DRAW);
+  //  glBindBuffer(GL_ARRAY_BUFFER, CBO);
+  //  glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(vec3), colors.data(),
+  //               GL_STATIC_DRAW);
+  //  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)0);
+  //  glEnableVertexAttribArray(1);
+
+  //  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  //  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(vec3i),
+  //           indices.data(), GL_STATIC_DRAW);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
@@ -164,10 +172,10 @@ void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
 void GlUtils::Draw(std::vector<vec2>& vertices, std::vector<vec3>& colors,
                    std::vector<vec3i>& indices) {
   CreateBuffer(vertices, colors, indices);
-  glUseProgram(shaderProgram); // Use the shader program
-  glBindVertexArray(VAO); // Bind the Vertex Array Object
-  glDrawArrays(GL_TRIANGLES, 0, vertices.size()); // Draw the triangle
-  glBindVertexArray(0); // Unbind the VAO (not strictly necessary)
+  glUseProgram(program);   // Use the shader program
+  glBindVertexArray(VAO);  // Bind the Vertex Array Object
+  glDrawArrays(GL_TRIANGLES, 0, 3);  // Draw the triangle
+  glBindVertexArray(0);  // Unbind the VAO (not strictly necessary)
 }
 
 void GlUtils::Run() {

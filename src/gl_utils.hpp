@@ -35,9 +35,9 @@ class GlUtils {
 
   std::string vertexShaderSource;
   std::string fragmentShaderSource;
-  GLuint shaderProgram;
-
-  //  GLSLSHADER* shader;
+  GLuint vertexShader;
+  GLuint fragmentShader;
+  GLuint program;
 
   void Init();
   GLFWwindow* InitGLFW();
@@ -45,11 +45,11 @@ class GlUtils {
   void InitViewport();
 
   std::string ReadShaderSource(const std::string path);
-  GLuint CompileShader(std::string& source, int type);
-  GLuint CreateProgram(GLuint vertexShader, GLuint fragmentShader);
+  void CompileShader(std::string& source, GLuint& target, GLenum type);
+  void CreateProgram(GLuint& program, GLuint& vertexShader,
+                     GLuint& fragmentShader);
 
   void CreateBuffer(std::vector<vec2>& vertices, std::vector<vec3>& colors,
                     std::vector<vec3i>& indices);
-  void BindBuffer();
 };
 }  // namespace wvxy
