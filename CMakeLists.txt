@@ -19,8 +19,9 @@ file(GLOB EXTERNAL_LIB
         ${EXT_DIR}/*.h
 )
 
-include(cmake_src/copy_shaders.cmake)
-set(CMAKE_SCRIPTS ${CMAKE_CURRENT_SOURCE_DIR}/cmake_src)
+include(cmake/copy_shaders.cmake)
+set(CMAKE_SCRIPTS ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 add_subdirectory(${EXT_DIR}/glad)
 add_subdirectory(example)
+add_subdirectory(learnModernC++)
