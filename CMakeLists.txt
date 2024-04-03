@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(Utils)
+project(Utils4C++)
 
 set(CMAKE_CXX_STANDARD 23)
 
@@ -24,3 +24,4 @@ set(CMAKE_SCRIPTS ${CMAKE_CURRENT_SOURCE_DIR}/cmake_src)
 
 add_subdirectory(${EXT_DIR}/glad)
 add_subdirectory(example)
+add_subdirectory(modern_c++)

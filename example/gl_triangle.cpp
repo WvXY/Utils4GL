@@ -36,14 +36,14 @@ int main() {
     glfwSwapBuffers(window);
 
     // frame time
-    auto t1 = std::chrono::high_resolution_clock ::now();
-    std::chrono::duration<double> frame_time = t1 - t0;
-    t0 = t1;
     frame_count++;
 
     if (frame_count % 100 == 0) {
-      std::cout << "Frame Time: " << frame_time.count() << '\t' << "\t";
-      std::cout << "FPS: " << 1.f / frame_time.count() << '\n';
+      auto t1 = std::chrono::high_resolution_clock ::now();
+      std::chrono::duration<double> frame_time = t1 - t0;
+      t0 = t1;
+
+      std::cout << "Avg FPS(100 frames): " << 100.f / frame_time.count() << '\n';
     }
   }
 
