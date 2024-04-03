@@ -1,8 +1,6 @@
 #include <iostream>
-#include <string.h>
 
 #include <GLFW/glfw3.h>
-#include <gl/GL.h>
 
 void render_loop() {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
