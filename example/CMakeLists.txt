@@ -28,3 +28,27 @@ target_include_directories(${PROJECT_NAME}
 include(${CMAKE_SCRIPTS}/copy_shaders.cmake)
 
 copy_shaders()
+
+####################################
+add_executable(OpenGL-Legacy gl_legacy_demo.cpp)
+target_include_directories(OpenGL-Legacy
+        PRIVATE ${SRC_DIR}
+        PRIVATE ${EXT_DIR}
+)
+target_link_libraries(OpenGL-Legacy
+        OpenGL::GL
+        glfw
+        glad
+)
+
+####################################
+add_executable(OpenGL-Modern gl_modern_demo.cpp)
+target_include_directories(OpenGL-Modern
+        PRIVATE ${SRC_DIR}
+        PRIVATE ${EXT_DIR}
+)
+target_link_libraries(OpenGL-Modern
+        OpenGL::GL
+        glfw
+        glad
+)
