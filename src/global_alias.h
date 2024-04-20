@@ -10,6 +10,7 @@ typedef Eigen::Matrix2f mat2;
 typedef Eigen::Matrix3f mat3;
 typedef Eigen::Matrix4f mat4;
 
-typedef  Eigen::Vector3i vec3i;
+typedef Eigen::Vector3i ivec3;  // same definition in glsl
+typedef Eigen::Vector3i vec3i;
 
 #endif // UTILS_GLOBAL_ALIAS_H
