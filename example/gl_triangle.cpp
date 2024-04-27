@@ -5,6 +5,7 @@
 
 #include "gl_utils.hpp"
 #include "global_alias.h"
+#include "game_object.hpp"
 
 int main() {
   std::vector<vec2> vertices = {
@@ -16,6 +17,17 @@ int main() {
                               {1.0f, 0.0f, 1.0f}};
 
   std::vector<vec3i> indices = {{0, 1, 2}, {0, 1, 3}};
+
+  auto go = std::make_unique<GameObject>(vertices, colors, indices);
+
+  std::vector<vec2> vertices2 = {
+      {0.0f, 0.8f}, {0.5f, -0.4f}, {0.5f, 0.5f}, {0.2f, 0.4f}};
+
+  std::vector<vec3> colors2 = {{1.0f, 0.0f, 0.0f},
+                              {0.0f, 1.0f, 0.0f},
+                              {0.0f, 0.0f, 1.0f},
+                              {1.0f, 0.0f, 1.0f}};
+  std::vector<vec3i> indices2 = {{0, 1, 2}};
 
   // initialize
   auto t0{std::chrono::high_resolution_clock::now()};
@@ -31,6 +43,7 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     gl_utils->Draw(vertices, colors, indices);
+    gl_utils->Draw(vertices2, colors2, indices2);
 
     glfwPollEvents();
     glfwSwapBuffers(window);
