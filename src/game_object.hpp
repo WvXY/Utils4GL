@@ -4,13 +4,20 @@
 
 struct GameObject {
  public:
-  GameObject(std::vector<vec2> vertices, std::vector<vec3> colors,
-             std::vector<vec3i> indices = {})
-      : vertices{vertices}, colors{colors}, indices{indices} {}
+  GameObject(std::vector<vec3> vertices, std::vector<vec3> colors,
+             std::vector<vec3i> indices)
+      : vertices{vertices}, colors{colors}, indices{indices} {
+    hasIndices = true;
+  }
 
-  std::vector<vec2> vertices;
+  GameObject(std::vector<vec3> vertices, std::vector<vec3> colors)
+      : vertices{vertices}, colors{colors} {}
+
+  std::vector<vec3> vertices;
   std::vector<vec3> colors;
   std::vector<vec3i> indices;
+
+  bool hasIndices = false;
 
   void Draw();
 };

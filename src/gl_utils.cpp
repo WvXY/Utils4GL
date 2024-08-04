@@ -168,7 +168,7 @@ void GlUtils::CreateProgram(GLuint& program, GLuint& vertexShader,
 //  glBindVertexArray(0);
 //}
 
-void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
+void GlUtils::CreateBuffer(std::vector<vec3>& vertices,
                            std::vector<vec3>& colors,
                            std::vector<vec3i>& indices) {
   glGenVertexArrays(1, &VAO);
@@ -178,9 +178,9 @@ void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec2), vertices.data(),
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec3), vertices.data(),
                GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(vec2), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)0);
   glEnableVertexAttribArray(0);
 
   glBindBuffer(GL_ARRAY_BUFFER, CBO);
@@ -200,7 +200,7 @@ void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
   glBindVertexArray(0);
 }
 
-void GlUtils::Draw(std::vector<vec2> vertices, std::vector<vec3> colors,
+void GlUtils::Draw(std::vector<vec3> vertices, std::vector<vec3> colors,
                    std::vector<vec3i> indices) {
   CreateBuffer(vertices, colors, indices);
   glUseProgram(program);   // Use the shader program

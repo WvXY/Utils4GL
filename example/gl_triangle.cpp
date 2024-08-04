@@ -8,8 +8,8 @@
 #include "game_object.hpp"
 
 int main() {
-  std::vector<vec2> vertices = {
-      {0.0f, 0.5f}, {0.5f, -0.5f}, {-0.5f, -0.5f}, {0.2f, 0.4f}};
+  std::vector<vec3> vertices = {
+      {0.0f, 0.5f, 0.f}, {0.5f, -0.5f, 0.f}, {-0.5f, -0.5f, 0.f}, {0.2f, 0.4f, 0.f}};
 
   std::vector<vec3> colors = {{1.0f, 1.0f, 0.0f},
                               {0.0f, 1.0f, 1.0f},
@@ -20,8 +20,8 @@ int main() {
 
   auto go = std::make_unique<GameObject>(vertices, colors, indices);
 
-  std::vector<vec2> vertices2 = {
-      {0.0f, 0.8f}, {0.5f, -0.4f}, {0.5f, 0.5f}, {0.2f, 0.4f}};
+  std::vector<vec3> vertices2 = {
+      {0.0f, 0.8f, 0.f}, {0.5f, -0.4f, 0.f}, {0.5f, 0.5f, 0.f}, {0.2f, 0.4f, 0.f}};
 
   std::vector<vec3> colors2 = {{1.0f, 0.0f, 0.0f},
                               {0.0f, 1.0f, 0.0f},
@@ -44,7 +44,7 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     gl_utils.Draw(vertices, colors, indices);
-    gl_utils.Draw(vertices2, colors2, indices2);
+    // gl_utils.Draw(vertices2, colors2, indices2);
 
     glfwPollEvents();
     glfwSwapBuffers(window);

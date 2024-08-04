@@ -23,7 +23,7 @@ class GlUtils {
   int SCR_HEIGHT = 600;
   GLFWwindow* window;
 
-  void Draw(std::vector<vec2> vertices, std::vector<vec3> colors,
+  void Draw(std::vector<vec3> vertices, std::vector<vec3> colors,
             std::vector<vec3i> indices = {});
 
   void SetTitle(std::string newTitle);
@@ -53,8 +53,23 @@ class GlUtils {
   void CreateProgram(GLuint& program, GLuint& vertexShader,
                      GLuint& fragmentShader);
 
-  void CreateBuffer(std::vector<vec2>& vertices, std::vector<vec3>& colors,
+  void CreateBuffer(std::vector<vec3>& vertices, std::vector<vec3>& colors,
                     std::vector<vec3i>& indices);
-  void CreateBuffer(std::vector<vec2>& vertices, std::vector<vec3>& colors);
+  void CreateBuffer(std::vector<vec3>& vertices, std::vector<vec3>& colors);
 };
+
+class Camera {
+ public:
+  Camera();
+  Camera(vec3 position, vec3 target, vec3 up);
+  Camera(const Camera&) = delete;
+  Camera& operator=(const Camera&) = delete;
+
+  vec3 position;
+  vec3 target;
+  vec3 up;
+
+  void LookAt();
+};
+
 }  // namespace wvxy
