@@ -14,21 +14,19 @@ int main() {
                                 {0.5f, -0.5f, 0.f},
                                 {-0.5f, -0.5f, 0.f},
                                 {0.2f, 0.4f, 0.f}};
-
   std::vector<vec3> colors = {{1.0f, 1.0f, 0.0f},
                               {0.0f, 1.0f, 1.0f},
                               {0.0f, 0.0f, 1.0f},
                               {1.0f, 0.0f, 1.0f}};
-
   std::vector<vec3i> indices = {{0, 1, 2}, {0, 1, 3}};
-
+  std::vector<vec2> texCoords = {
+      {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}};
   auto go = std::make_unique<GameObject>(vertices, colors, indices);
 
   std::vector<vec3> vertices2 = {{0.0f, 0.8f, 0.f},
                                  {0.5f, -0.4f, 0.f},
                                  {0.5f, 0.5f, 0.f},
                                  {0.2f, 0.4f, 0.f}};
-
   std::vector<vec3> colors2 = {{1.0f, 0.0f, 0.0f},
                                {0.0f, 1.0f, 0.0f},
                                {0.0f, 0.0f, 1.0f},
@@ -40,18 +38,22 @@ int main() {
   auto t0 = time_start;
   size_t frame_count{0};
 
-  wvxy::GlUtils gl_utils{800, 800, "Triangle"};
-  // auto gl_utils = std::make_unique<wvxy::GlUtils>(800, 800, "Triangle");
+  wvxy::GlUtils app{800, 800, "Triangle"};
+  auto* window = app.window;
 
-  auto* window = gl_utils.window;
-  gl_utils.basicShader.use();
+  // TODO add functions to manage all the texture stuff
+  auto tex0 = app.readTexture("../../assets/wall.jpg");
+  glUniform1i(glGetUniformLocation(app.basicShader.getID(), "tex0"), 0);
 
   while (!glfwWindowShouldClose(window)) {
     glClearColor(0.4f, 0.6f, 0.1f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    gl_utils.draw(vertices, colors, indices);
-    // gl_utils.Draw(vertices2, colors2, indices2);
+    glActiveTexture(GL_TEXTURE);
+    glBindTexture(GL_TEXTURE_2D, tex0);
+
+    app.draw(vertices, colors, indices, texCoords);
+    app.draw(vertices2, colors2, indices2);
 
     glfwPollEvents();
     glfwSwapBuffers(window);
@@ -63,8 +65,7 @@ int main() {
       auto t1 = std::chrono::high_resolution_clock ::now();
       std::chrono::duration<double> frame_time = t1 - t0;
       t0 = t1;
-      gl_utils.addInfoToTitle("FPS: " +
-                              std::to_string(100.f / frame_time.count()));
+      app.addInfoToTitle("FPS: " + std::to_string(100.f / frame_time.count()));
     }
   }
 

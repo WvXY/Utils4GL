@@ -10,6 +10,7 @@ find_package(OpenGL REQUIRED)
 add_executable(${PROJECT_NAME}
         ${SRC}
         ${tinyobjloader-Source}
+        ${EXTERNAL_LIB}
         gl_triangle.cpp
         ../src/shader.cpp
         ../src/shader.hpp

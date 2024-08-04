@@ -25,11 +25,13 @@ class GlUtils {
   int SCR_HEIGHT = 600;
   GLFWwindow* window;
 
-  Shader basicShader{"../shaders/basic_shader.vert", "../shaders/basic_shader.frag"};
+  Shader basicShader{"../shaders/basic_shader.vert",
+                     "../shaders/basic_shader.frag"};
 
+  unsigned int readTexture(const std::string& path);
 
   void draw(std::vector<vec3> vertices, std::vector<vec3> colors,
-            std::vector<vec3i> indices = {});
+            std::vector<vec3i> indices = {}, std::vector<vec2> texCoords = {});
 
   void setTitle(std::string newTitle);
   void addInfoToTitle(std::string extraInfo);
@@ -46,12 +48,11 @@ class GlUtils {
 
   std::string windowName;
 
-  // TODO: refactor to a class for shaders
-  GLuint VBO, VAO, EBO, CBO;
-
-  void createBuffer(std::vector<vec3>& vertices, std::vector<vec3>& colors,
-                    std::vector<vec3i>& indices);
-  void createBuffer(std::vector<vec3>& vertices, std::vector<vec3>& colors);
+  GLuint createBuffer(std::vector<vec3>& vertices, std::vector<vec3>& colors,
+                      std::vector<vec3i>& indices,
+                      std::vector<vec2>& texCoords);
+  // GLuint createBuffer(std::vector<vec3>& vertices, std::vector<vec3>&
+  // colors);
 };
 
 // class Camera {

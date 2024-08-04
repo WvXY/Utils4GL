@@ -1,5 +1,8 @@
 #include "gl_utils.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -11,17 +14,16 @@ namespace wvxy {
 GlUtils::GlUtils(int screen_width, int screen_height, std::string window_name)
     : SCR_WIDTH(screen_width),
       SCR_HEIGHT(screen_height),
-      windowName(window_name)
-{
+      windowName(window_name) {
   init();
 }
 
 GlUtils::~GlUtils() {
   glfwDestroyWindow(window);
-  glDeleteVertexArrays(1, &VAO);
-  glDeleteBuffers(1, &VBO);
-  glDeleteBuffers(1, &EBO);
-  glDeleteBuffers(1, &CBO);
+  // glDeleteVertexArrays(1, &VAO);
+  // glDeleteBuffers(1, &VBO);
+  // glDeleteBuffers(1, &EBO);
+  // glDeleteBuffers(1, &CBO);
   glfwTerminate();
 }
 
@@ -113,13 +115,41 @@ void GlUtils::initViewport() { glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT); }
 //  glBindVertexArray(0);
 //}
 
-void GlUtils::createBuffer(std::vector<vec3>& vertices,
-                           std::vector<vec3>& colors,
-                           std::vector<vec3i>& indices) {
+unsigned int GlUtils::readTexture(const std::string& path) {
+  unsigned int texture;
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  // set the texture wrapping/filtering options (on the currently bound texture
+  // object)
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                  GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  // load and generate the texture
+  int width, height, nrChannels;
+  unsigned char* data =
+      stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
+  if (data) {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+  } else {
+    std::cout << "Failed to load texture" << std::endl;
+  }
+  stbi_image_free(data);
+  return texture;
+}
+
+// TODO separate into basicShader and textureShader
+GLuint GlUtils::createBuffer(std::vector<vec3>& vertices,
+                             std::vector<vec3>& colors,
+                             std::vector<vec3i>& indices,
+                             std::vector<vec2>& texCoords) {
+  GLuint VBO, VAO, CBO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &CBO);
-
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -135,29 +165,41 @@ void GlUtils::createBuffer(std::vector<vec3>& vertices,
   glEnableVertexAttribArray(1);
 
   if (indices.size() != 0) {
+    GLuint EBO;
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(vec3i),
                  indices.data(), GL_STATIC_DRAW);
   }
 
+  if (texCoords.size() != 0) {
+    GLuint TBO;
+    glGenBuffers(1, &TBO);
+    glBindBuffer(GL_ARRAY_BUFFER, TBO);
+    glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(vec2),
+                 texCoords.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(vec2), (void*)0);
+    glEnableVertexAttribArray(2);
+  }
+
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
+  return VAO;
 }
 
 void GlUtils::draw(std::vector<vec3> vertices, std::vector<vec3> colors,
-                   std::vector<vec3i> indices) {
+                   std::vector<vec3i> indices, std::vector<vec2> texCoords) {
   basicShader.use();
-  createBuffer(vertices, colors, indices);
 
-  glBindVertexArray(VAO);  // Bind the Vertex Array Object
+  auto VAO = createBuffer(vertices, colors, indices, texCoords);
+  glBindVertexArray(VAO);
 
   if (indices.size() == 0)
     glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size());
   else
     glDrawElements(GL_TRIANGLES, indices.size() * 3, GL_UNSIGNED_INT, nullptr);
 
-  glBindVertexArray(0);  // Unbind the VAO (not strictly necessary)
+  glBindVertexArray(0);
 }
 
 void GlUtils::run() {
