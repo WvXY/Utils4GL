@@ -6,8 +6,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <filesystem>
 
 #include "global_alias.h"
+#include "shader.hpp"
 
 namespace wvxy {
 
@@ -23,11 +25,16 @@ class GlUtils {
   int SCR_HEIGHT = 600;
   GLFWwindow* window;
 
+  Shader basicShader = Shader("../shaders/basic_shader.vert", "../shaders/basic_shader.frag");
+
+
   void Draw(std::vector<vec3> vertices, std::vector<vec3> colors,
             std::vector<vec3i> indices = {});
 
   void SetTitle(std::string newTitle);
   void AddInfoToTitle(std::string extraInfo);
+
+  void SetWireframeMode(bool wireframeMode);
 
   void virtual Run();
 
@@ -42,34 +49,25 @@ class GlUtils {
   // TODO: refactor to a class for shaders
   GLuint VBO, VAO, EBO, CBO;
 
-  std::string vertexShaderSource;
-  std::string fragmentShaderSource;
-  GLuint vertexShader;
-  GLuint fragmentShader;
-  GLuint program;
-
-  std::string ReadShaderSource(const std::string path);
-  void CompileShader(std::string& source, GLuint& target, GLenum type);
-  void CreateProgram(GLuint& program, GLuint& vertexShader,
-                     GLuint& fragmentShader);
+  std::filesystem::path parentPath = std::filesystem::current_path().parent_path();
 
   void CreateBuffer(std::vector<vec3>& vertices, std::vector<vec3>& colors,
                     std::vector<vec3i>& indices);
   void CreateBuffer(std::vector<vec3>& vertices, std::vector<vec3>& colors);
 };
 
-class Camera {
- public:
-  Camera();
-  Camera(vec3 position, vec3 target, vec3 up);
-  Camera(const Camera&) = delete;
-  Camera& operator=(const Camera&) = delete;
-
-  vec3 position;
-  vec3 target;
-  vec3 up;
-
-  void LookAt();
-};
+// class Camera {
+//  public:
+//   Camera();
+//   Camera(vec3 position, vec3 target, vec3 up);
+//   Camera(const Camera&) = delete;
+//   Camera& operator=(const Camera&) = delete;
+//
+//   vec3 position;
+//   vec3 target;
+//   vec3 up;
+//
+//   void LookAt();
+// };
 
 }  // namespace wvxy

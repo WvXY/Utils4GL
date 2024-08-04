@@ -11,6 +11,8 @@ add_executable(${PROJECT_NAME}
         ${SRC}
         ${tinyobjloader-Source}
         gl_triangle.cpp
+        ../src/shader.cpp
+        ../src/shader.hpp
 )
 
 target_link_libraries(${PROJECT_NAME}

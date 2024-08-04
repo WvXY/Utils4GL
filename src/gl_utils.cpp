@@ -11,7 +11,8 @@ namespace wvxy {
 GlUtils::GlUtils(int screen_width, int screen_height, std::string window_name)
     : SCR_WIDTH(screen_width),
       SCR_HEIGHT(screen_height),
-      windowName(window_name) {
+      windowName(window_name)
+{
   Init();
 }
 
@@ -21,9 +22,6 @@ GlUtils::~GlUtils() {
   glDeleteBuffers(1, &VBO);
   glDeleteBuffers(1, &EBO);
   glDeleteBuffers(1, &CBO);
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
-  glDeleteProgram(program);
   glfwTerminate();
 }
 
@@ -32,16 +30,6 @@ void GlUtils::Init() {
   InitGLAD();
   InitViewport();
   glfwSwapInterval(0);  // vsync : 0 off, 1 on
-
-  std::filesystem::path p = std::filesystem::current_path().parent_path();
-  fragmentShaderSource =
-      ReadShaderSource(p.string() + "/shaders/simple_shader.frag");
-  vertexShaderSource =
-      ReadShaderSource(p.string() + "/shaders/simple_shader.vert");
-
-  CompileShader(vertexShaderSource, vertexShader, GL_VERTEX_SHADER);
-  CompileShader(fragmentShaderSource, fragmentShader, GL_FRAGMENT_SHADER);
-  CreateProgram(program, vertexShader, fragmentShader);
 }
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
@@ -55,6 +43,13 @@ void GlUtils::SetTitle(std::string newTitle) {
 
 void GlUtils::AddInfoToTitle(std::string extraInfo) {
   glfwSetWindowTitle(window, (windowName + " | " + extraInfo).c_str());
+}
+
+void GlUtils::SetWireframeMode(bool wireframeMode) {
+  if (!wireframeMode)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  else  // wireframe
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 GLFWwindow* GlUtils::InitGLFW() {
@@ -90,56 +85,6 @@ void GlUtils::InitGLAD() {
 }
 
 void GlUtils::InitViewport() { glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT); }
-
-// https://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
-std::string GlUtils::ReadShaderSource(const std::string path) {
-  std::ifstream file{path};
-
-  if (!file.is_open()) {
-    std::cout << "Error: File do not exist or could not open" << std::endl;
-    throw std::runtime_error("Could not open file: " + path);
-  }
-
-  std::stringstream buffer;
-  buffer << file.rdbuf();
-  file.close();
-
-  return buffer.str();
-}
-
-void GlUtils::CompileShader(std::string& source, GLuint& target, GLenum type) {
-  target = glCreateShader(type);
-  auto* src = source.c_str();
-  glShaderSource(target, 1, &src, nullptr);
-  glCompileShader(target);
-
-  int success;
-  char infoLog[512];
-  glGetShaderiv(target, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(target, 512, nullptr, infoLog);
-    std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
-    glDeleteShader(target);
-    exit(EXIT_FAILURE);
-  }
-}
-
-void GlUtils::CreateProgram(GLuint& program, GLuint& vertexShader,
-                            GLuint& fragmentShader) {
-  program = glCreateProgram();
-  glAttachShader(program, vertexShader);
-  glAttachShader(program, fragmentShader);
-  glLinkProgram(program);
-
-  int success;
-  char infoLog[512];
-  glGetProgramiv(program, GL_LINK_STATUS, &success);
-  if (!success) {
-    glGetProgramInfoLog(program, 512, nullptr, infoLog);
-    std::cout << stderr << "ERROR::PROGRAM::LINKING_FAILED\n"
-              << infoLog << std::endl;
-  }
-}
 
 // another approach to create buffer
 // void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
@@ -202,8 +147,9 @@ void GlUtils::CreateBuffer(std::vector<vec3>& vertices,
 
 void GlUtils::Draw(std::vector<vec3> vertices, std::vector<vec3> colors,
                    std::vector<vec3i> indices) {
+  basicShader.use();
   CreateBuffer(vertices, colors, indices);
-  glUseProgram(program);   // Use the shader program
+
   glBindVertexArray(VAO);  // Bind the Vertex Array Object
 
   if (indices.size() == 0)
