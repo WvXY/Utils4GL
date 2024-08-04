@@ -50,7 +50,7 @@ int main() {
     glClearColor(0.4f, 0.6f, 0.1f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    gl_utils.Draw(vertices, colors, indices);
+    gl_utils.draw(vertices, colors, indices);
     // gl_utils.Draw(vertices2, colors2, indices2);
 
     glfwPollEvents();
@@ -63,7 +63,7 @@ int main() {
       auto t1 = std::chrono::high_resolution_clock ::now();
       std::chrono::duration<double> frame_time = t1 - t0;
       t0 = t1;
-      gl_utils.AddInfoToTitle("FPS: " +
+      gl_utils.addInfoToTitle("FPS: " +
                               std::to_string(100.f / frame_time.count()));
     }
   }

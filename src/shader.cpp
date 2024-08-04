@@ -5,8 +5,8 @@
 namespace wvxy {
 
 Shader::Shader(std::string vertexPath, std::string fragmentPath)
-    : vertexCode{ReadShaderSource(std::move(vertexPath))},
-      fragmentCode{ReadShaderSource(std::move(fragmentPath))} {
+    : vertexCode{readShaderSource(std::move(vertexPath))},
+      fragmentCode{readShaderSource(std::move(fragmentPath))} {
   // it seems it cannot be created before glut init.
   // CreateProgram(vertexCode, fragmentCode);
 }
@@ -15,7 +15,7 @@ Shader::~Shader() { glDeleteProgram(ID); }
 
 void Shader::use() {
   if (!isCompiled) {
-    CreateProgram(vertexCode, fragmentCode);
+    createProgram(vertexCode, fragmentCode);
     isCompiled = true;
   }
   glUseProgram(ID);
@@ -34,7 +34,7 @@ void Shader::setFloat(const std::string& name, float value) const {
 }
 
 // https://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
-std::string Shader::ReadShaderSource(const std::string path) {
+std::string Shader::readShaderSource(const std::string path) {
   std::ifstream file{path};
 
   if (!file.is_open()) {
@@ -48,7 +48,7 @@ std::string Shader::ReadShaderSource(const std::string path) {
   return buffer.str();
 }
 
-void Shader::CompileShader(std::string& source, GLuint& target, GLenum type) {
+void Shader::compileShader(std::string& source, GLuint& target, GLenum type) {
   target = glCreateShader(type);
   const char* src = source.c_str();
   glShaderSource(target, 1, &src, nullptr);
@@ -65,11 +65,11 @@ void Shader::CompileShader(std::string& source, GLuint& target, GLenum type) {
   }
 }
 
-void Shader::CreateProgram(std::string& vertexCode, std::string& fragmentCode) {
+void Shader::createProgram(std::string& vertexCode, std::string& fragmentCode) {
   GLuint vertexShader, fragmentShader;
 
-  CompileShader(vertexCode, vertexShader, GL_VERTEX_SHADER);
-  CompileShader(fragmentCode, fragmentShader, GL_FRAGMENT_SHADER);
+  compileShader(vertexCode, vertexShader, GL_VERTEX_SHADER);
+  compileShader(fragmentCode, fragmentShader, GL_FRAGMENT_SHADER);
 
   ID = glCreateProgram();
   glAttachShader(ID, vertexShader);

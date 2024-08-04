@@ -13,7 +13,7 @@ GlUtils::GlUtils(int screen_width, int screen_height, std::string window_name)
       SCR_HEIGHT(screen_height),
       windowName(window_name)
 {
-  Init();
+  init();
 }
 
 GlUtils::~GlUtils() {
@@ -25,10 +25,10 @@ GlUtils::~GlUtils() {
   glfwTerminate();
 }
 
-void GlUtils::Init() {
-  InitGLFW();
-  InitGLAD();
-  InitViewport();
+void GlUtils::init() {
+  initGLFW();
+  initGLAD();
+  initViewport();
   glfwSwapInterval(0);  // vsync : 0 off, 1 on
 }
 
@@ -36,23 +36,23 @@ void FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
-void GlUtils::SetTitle(std::string newTitle) {
+void GlUtils::setTitle(std::string newTitle) {
   windowName = newTitle;
   glfwSetWindowTitle(window, windowName.c_str());
 }
 
-void GlUtils::AddInfoToTitle(std::string extraInfo) {
+void GlUtils::addInfoToTitle(std::string extraInfo) {
   glfwSetWindowTitle(window, (windowName + " | " + extraInfo).c_str());
 }
 
-void GlUtils::SetWireframeMode(bool wireframeMode) {
+void GlUtils::setWireframeMode(bool wireframeMode) {
   if (!wireframeMode)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   else  // wireframe
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
-GLFWwindow* GlUtils::InitGLFW() {
+GLFWwindow* GlUtils::initGLFW() {
   if (!glfwInit()) {
     std::cout << stderr << "Failed to initialize GLFW" << std::endl;
     exit(EXIT_FAILURE);
@@ -77,14 +77,14 @@ GLFWwindow* GlUtils::InitGLFW() {
   return window;
 }
 
-void GlUtils::InitGLAD() {
+void GlUtils::initGLAD() {
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     std::cout << stderr << "Failed to initialize GLAD" << std::endl;
     exit(EXIT_FAILURE);
   }
 }
 
-void GlUtils::InitViewport() { glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT); }
+void GlUtils::initViewport() { glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT); }
 
 // another approach to create buffer
 // void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
@@ -113,7 +113,7 @@ void GlUtils::InitViewport() { glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT); }
 //  glBindVertexArray(0);
 //}
 
-void GlUtils::CreateBuffer(std::vector<vec3>& vertices,
+void GlUtils::createBuffer(std::vector<vec3>& vertices,
                            std::vector<vec3>& colors,
                            std::vector<vec3i>& indices) {
   glGenVertexArrays(1, &VAO);
@@ -145,10 +145,10 @@ void GlUtils::CreateBuffer(std::vector<vec3>& vertices,
   glBindVertexArray(0);
 }
 
-void GlUtils::Draw(std::vector<vec3> vertices, std::vector<vec3> colors,
+void GlUtils::draw(std::vector<vec3> vertices, std::vector<vec3> colors,
                    std::vector<vec3i> indices) {
   basicShader.use();
-  CreateBuffer(vertices, colors, indices);
+  createBuffer(vertices, colors, indices);
 
   glBindVertexArray(VAO);  // Bind the Vertex Array Object
 
@@ -160,7 +160,7 @@ void GlUtils::Draw(std::vector<vec3> vertices, std::vector<vec3> colors,
   glBindVertexArray(0);  // Unbind the VAO (not strictly necessary)
 }
 
-void GlUtils::Run() {
+void GlUtils::run() {
   while (!glfwWindowShouldClose(window)) {
     // render
     glClearColor(0.2f, 0.3f, 0.3f, 1.f);

@@ -25,35 +25,33 @@ class GlUtils {
   int SCR_HEIGHT = 600;
   GLFWwindow* window;
 
-  Shader basicShader = Shader("../shaders/basic_shader.vert", "../shaders/basic_shader.frag");
+  Shader basicShader{"../shaders/basic_shader.vert", "../shaders/basic_shader.frag"};
 
 
-  void Draw(std::vector<vec3> vertices, std::vector<vec3> colors,
+  void draw(std::vector<vec3> vertices, std::vector<vec3> colors,
             std::vector<vec3i> indices = {});
 
-  void SetTitle(std::string newTitle);
-  void AddInfoToTitle(std::string extraInfo);
+  void setTitle(std::string newTitle);
+  void addInfoToTitle(std::string extraInfo);
 
-  void SetWireframeMode(bool wireframeMode);
+  void setWireframeMode(bool wireframeMode);
 
-  void virtual Run();
+  void virtual run();
 
  private:
-  void Init();
-  GLFWwindow* InitGLFW();
-  void InitGLAD();
-  void InitViewport();
+  void init();
+  GLFWwindow* initGLFW();
+  void initGLAD();
+  void initViewport();
 
   std::string windowName;
 
   // TODO: refactor to a class for shaders
   GLuint VBO, VAO, EBO, CBO;
 
-  std::filesystem::path parentPath = std::filesystem::current_path().parent_path();
-
-  void CreateBuffer(std::vector<vec3>& vertices, std::vector<vec3>& colors,
+  void createBuffer(std::vector<vec3>& vertices, std::vector<vec3>& colors,
                     std::vector<vec3i>& indices);
-  void CreateBuffer(std::vector<vec3>& vertices, std::vector<vec3>& colors);
+  void createBuffer(std::vector<vec3>& vertices, std::vector<vec3>& colors);
 };
 
 // class Camera {

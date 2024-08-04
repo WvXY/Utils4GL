@@ -19,5 +19,5 @@ struct GameObject {
 
   bool hasIndices = false;
 
-  void Draw();
+  void draw();
 };

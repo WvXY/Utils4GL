@@ -28,9 +28,9 @@ class Shader {
   std::string vertexCode;
   std::string fragmentCode;
 
-  std::string ReadShaderSource(std::string path);
-  void CompileShader(std::string& source, GLuint& target, GLenum type);
-  void CreateProgram(std::string& vertexCode, std::string& fragmentCode);
+  std::string readShaderSource(std::string path);
+  void compileShader(std::string& source, GLuint& target, GLenum type);
+  void createProgram(std::string& vertexCode, std::string& fragmentCode);
 };
 
 }  // namespace wvxy
