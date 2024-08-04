@@ -26,6 +26,9 @@ class GlUtils {
   void Draw(std::vector<vec2> vertices, std::vector<vec3> colors,
             std::vector<vec3i> indices = {});
 
+  void SetTitle(std::string newTitle);
+  void AddInfoToTitle(std::string extraInfo);
+
   void virtual Run();
 
  private:

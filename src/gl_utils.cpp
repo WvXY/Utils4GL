@@ -16,6 +16,7 @@ GlUtils::GlUtils(int screen_width, int screen_height, std::string window_name)
 }
 
 GlUtils::~GlUtils() {
+  glfwDestroyWindow(window);
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
   glDeleteBuffers(1, &EBO);
@@ -37,6 +38,7 @@ void GlUtils::Init() {
       ReadShaderSource(p.string() + "/shaders/simple_shader.frag");
   vertexShaderSource =
       ReadShaderSource(p.string() + "/shaders/simple_shader.vert");
+
   CompileShader(vertexShaderSource, vertexShader, GL_VERTEX_SHADER);
   CompileShader(fragmentShaderSource, fragmentShader, GL_FRAGMENT_SHADER);
   CreateProgram(program, vertexShader, fragmentShader);
@@ -44,6 +46,15 @@ void GlUtils::Init() {
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
+}
+
+void GlUtils::SetTitle(std::string newTitle) {
+  windowName = newTitle;
+  glfwSetWindowTitle(window, windowName.c_str());
+}
+
+void GlUtils::AddInfoToTitle(std::string extraInfo) {
+  glfwSetWindowTitle(window, (windowName + " | " + extraInfo).c_str());
 }
 
 GLFWwindow* GlUtils::InitGLFW() {
