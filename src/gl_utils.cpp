@@ -57,6 +57,49 @@ void GlUtils::framebufferSizeCallback(GLFWwindow* window,
   glViewport(0, 0, width, height);
 }
 
+void GlUtils::mouseCallback(GLFWwindow* window, double xpos, double ypos) {
+  GlUtils* instance = static_cast<GlUtils*>(glfwGetWindowUserPointer(window));
+  if (instance) {
+    instance->handleMouseMovement(xpos, ypos);
+  }
+}
+
+void GlUtils::handleMouseMovement(double xpos, double ypos) {
+  float xposf = static_cast<float>(xpos);
+  float yposf = static_cast<float>(ypos);
+
+  if (firstMouse) {
+    lastX = xposf;
+    lastY = yposf;
+    firstMouse = false;
+  }
+
+  float xoffset = xposf - lastX;
+  float yoffset = lastY - yposf;
+  lastX = xposf;
+  lastY = yposf;
+  camera.processMouseMovement(xoffset, yoffset);
+}
+
+void GlUtils::scrollCallback(GLFWwindow* window,
+                             double xoffset,
+                             double yoffset) {
+  GlUtils* instance = static_cast<GlUtils*>(glfwGetWindowUserPointer(window));
+  if (instance) {
+    // instance->handleScroll(xoffset, yoffset);
+    instance->camera.processMouseScroll(static_cast<float>(yoffset));
+  }
+}
+
+// void GlUtils::handleScroll(double xoffset, double yoffset) {
+//   if (camera.fov >= 1.0f && camera.fov <= 45.0f)
+//     camera.fov -= yoffset;
+//   if (camera.fov <= 1.0f)
+//     camera.fov = 1.0f;
+//   if (camera.fov >= 45.0f)
+//     camera.fov = 45.0f;
+// }
+
 GLFWwindow* GlUtils::initGLFW() {
   if (!glfwInit()) {
     std::cout << stderr << "Failed to initialize GLFW" << std::endl;
@@ -77,7 +120,11 @@ GLFWwindow* GlUtils::initGLFW() {
   }
 
   glfwMakeContextCurrent(window);
-  glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+  glfwSetWindowUserPointer(window, this);
+  glfwSetFramebufferSizeCallback(window, GlUtils::framebufferSizeCallback);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetCursorPosCallback(window, GlUtils::mouseCallback);
+  glfwSetScrollCallback(window, GlUtils::scrollCallback);
 
   return window;
 }
@@ -218,15 +265,14 @@ void GlUtils::run() {
 }
 
 void GlUtils::processInput(GLFWwindow* window) {
-  const float cameraSpeed = 0.1f;  // adjust accordingly
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    camera.position += cameraSpeed * camera.direction();
+    camera.processKeyboard(Camera::FORWARD, deltaTime);
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    camera.position -= cameraSpeed * camera.direction();
+    camera.processKeyboard(Camera::BACKWARD, deltaTime);
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    camera.position -= camera.cameraRight() * cameraSpeed;
+    camera.processKeyboard(Camera::LEFT, deltaTime);
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    camera.position += camera.cameraRight() * cameraSpeed;
+    camera.processKeyboard(Camera::RIGHT, deltaTime);
 }
 
 }  // namespace wvxy

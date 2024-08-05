@@ -52,9 +52,7 @@ int main() {
   auto* window = glApp.window;
   auto& camera = glApp.camera;
   auto& shader = glApp.basicShader;
-
   shader.use();
-  shader.setMat4("projection", camera.projection());
 
   // TODO add functions to manage all the texture stuff
   auto tex0 = glApp.loadTexture("../../assets/wall.jpg");
@@ -62,7 +60,7 @@ int main() {
 
   /*------------------------Loop-------------------------*/
   while (!glfwWindowShouldClose(window)) {
-    glClearColor(0.2f, 0.5f, 0.1f, 1.f);
+    glClearColor(0.2f, 0.6f, 0.3f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glApp.processInput(window);
@@ -71,6 +69,7 @@ int main() {
     glActiveTexture(GL_TEXTURE);
     glBindTexture(GL_TEXTURE_2D, tex0);
 
+    shader.setMat4("projection", camera.projection());
     glApp.basicShader.setMat4("view", camera.view());
 
     for (unsigned int i = 0; i < 24; i++) {
@@ -89,14 +88,10 @@ int main() {
 
     // frame time
     frame_count++;
-
-    if (frame_count % 100 == 0) {
-      auto t1 = std::chrono::high_resolution_clock ::now();
-      std::chrono::duration<double> frame_time = t1 - t0;
-      t0 = t1;
-      glApp.addInfoToTitle("FPS: " +
-                           std::to_string(100.f / frame_time.count()));
-    }
+    auto t1 = std::chrono::high_resolution_clock ::now();
+    glApp.deltaTime = std::chrono::duration<float>(t1 - t0).count();
+    t0 = t1;
+    glApp.addInfoToTitle("FPS: " + std::to_string(1.f / glApp.deltaTime));
   }
 
   return 0;

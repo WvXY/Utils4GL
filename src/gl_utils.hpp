@@ -50,19 +50,31 @@ class GlUtils {
 
   void virtual run();
 
+  float deltaTime;
+
  private:
   void init();
   GLFWwindow* initGLFW();
   void initGLAD();
   void initViewport();
 
+  std::string windowName;
   GLuint VAO, VBO, EBO, CBO, TBO;
+
+  // camera
+  bool firstMouse{true};
+  float lastX, lastY;
 
   static void framebufferSizeCallback(GLFWwindow* window,
                                       int width,
                                       int height);
+  static void mouseCallback(GLFWwindow* window, double xpos, double ypos);
+  static void scrollCallback(GLFWwindow* window,
+                             double xoffset,
+                             double yoffset);
 
-  std::string windowName;
+  void handleMouseMovement(double xpos, double ypos);
+  void handleScroll(double xoffset, double yoffset);
 
   GLuint createBuffer(std::vector<vec3>& vertices,
                       std::vector<vec3>& colors,
