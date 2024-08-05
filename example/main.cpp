@@ -7,8 +7,6 @@
 #include "global_alias.h"
 #include "game_object.hpp"
 
-#include <windows.h>
-
 int main() {
   std::vector<vec3> v0 = {{0.0f, 0.5f, 0.f},
                           {0.5f, -0.5f, 0.f},
