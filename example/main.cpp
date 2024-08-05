@@ -6,17 +6,18 @@
 #include "gl_utils.hpp"
 #include "global_alias.h"
 #include "game_object.hpp"
+#include "camera.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 int main() {
-  std::vector<vec3> v0 = {{0.0f, 0.5f, 0.f},
-                          {0.5f, -0.5f, 0.f},
-                          {-0.5f, -0.5f, 0.f},
+  std::vector<vec3> v0 = {{0.0f, 0.5f, 1.f},
+                          {0.5f, -0.5f, 3.f},
+                          {-0.5f, -0.5f, 2.f},
                           {0.2f, 0.4f, 0.f}};
-  std::vector<vec3> c0 = {{1.0f, 1.0f, 0.0f},
+  std::vector<vec3> c0 = {{1.0f, 1.0f, 1.0f},
                           {0.0f, 1.0f, 1.0f},
                           {0.0f, 0.0f, 1.0f},
                           {1.0f, 0.0f, 1.0f}};
@@ -25,15 +26,22 @@ int main() {
       {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}};
   auto go = std::make_unique<wvxy::GameObject>(v0, c0, i0);
 
-  std::vector<vec3> v1 = {{0.0f, 0.8f, 0.f},
-                          {0.5f, -0.4f, 0.f},
-                          {0.5f, 0.5f, 0.f},
+  std::vector<vec3> v1 = {{0.0f, 0.8f, 1.f},
+                          {0.5f, -0.4f, 2.f},
+                          {0.5f, 0.5f, 1.f},
                           {0.2f, 0.4f, 0.f}};
   std::vector<vec3> c1 = {{1.0f, 0.0f, 0.0f},
                           {0.0f, 1.0f, 0.0f},
                           {0.0f, 0.0f, 1.0f},
                           {1.0f, 0.0f, 1.0f}};
   std::vector<vec3i> i1 = {{0, 1, 2}};
+
+  std::vector<vec3> cubePositions = {
+      glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+      glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
+      glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
+      glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
+      glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
   // initialize
   auto time_start{std::chrono::high_resolution_clock::now()};
@@ -42,32 +50,41 @@ int main() {
 
   wvxy::GlUtils glApp{800, 800, "Triangle"};
   auto* window = glApp.window;
+  auto& camera = glApp.camera;
+  auto& shader = glApp.basicShader;
+
+  shader.use();
+  shader.setMat4("projection", camera.projection());
 
   // TODO add functions to manage all the texture stuff
   auto tex0 = glApp.loadTexture("../../assets/wall.jpg");
-  glUniform1i(glGetUniformLocation(glApp.basicShader.getID(), "tex0"), 0);
+  glUniform1i(glGetUniformLocation(shader.getID(), "tex0"), 0);
 
   /*------------------------Loop-------------------------*/
   while (!glfwWindowShouldClose(window)) {
-    glClearColor(0.4f, 0.3f, 0.1f, 1.f);
+    glClearColor(0.2f, 0.5f, 0.1f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // transform
-    glm::mat4 trans = glm::mat4(1.0f);
-    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-    trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-    unsigned int transformLoc =
-        glGetUniformLocation(glApp.basicShader.getID(), "transform");
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE,
-                       glm::value_ptr(trans));
+    glApp.processInput(window);
 
     // texture
     glActiveTexture(GL_TEXTURE);
     glBindTexture(GL_TEXTURE_2D, tex0);
 
-    // draw
-    glApp.draw(v0, c0, i0, tc0);
-    glApp.draw(v1, c1, i1);
+    glApp.basicShader.setMat4("view", camera.view());
+
+    for (unsigned int i = 0; i < 24; i++) {
+      // calculate the model matrix for each object and pass it to shader before
+      // drawing
+      glm::mat4 model = glm::mat4(1.0f);
+      model = glm::translate(model, cubePositions[i]);
+      float angle = 20.0f * i;
+      model =
+          glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+      glApp.basicShader.setMat4("model", model);
+
+      glApp.draw(v0, c0, i0, tc0);
+    }
 
     glfwPollEvents();
     glfwSwapBuffers(window);

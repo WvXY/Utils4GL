@@ -10,6 +10,9 @@
 
 #include "global_alias.h"
 #include "shader.hpp"
+#include "camera.hpp"
+
+#include <glm/ext/matrix_transform.hpp>
 
 namespace wvxy {
 
@@ -29,6 +32,8 @@ class GlUtils {
   Shader basicShader{"../../shaders/basic_shader.vert",
                      "../../shaders/basic_shader.frag"};
 
+  Camera camera{};
+
   unsigned int loadTexture(const std::string& path);
 
   void draw(std::vector<vec3> vertices,
@@ -41,6 +46,8 @@ class GlUtils {
 
   void setWireframeMode(bool wireframeMode);
 
+  void processInput(GLFWwindow* window);
+
   void virtual run();
 
  private:
@@ -48,6 +55,9 @@ class GlUtils {
   GLFWwindow* initGLFW();
   void initGLAD();
   void initViewport();
+
+  GLuint VAO, VBO, EBO, CBO, TBO;
+
   static void framebufferSizeCallback(GLFWwindow* window,
                                       int width,
                                       int height);
@@ -61,19 +71,5 @@ class GlUtils {
   // GLuint createBuffer(std::vector<vec3>& vertices, std::vector<vec3>&
   // colors);
 };
-
-// class Camera {
-//  public:
-//   Camera();
-//   Camera(vec3 position, vec3 target, vec3 up);
-//   Camera(const Camera&) = delete;
-//   Camera& operator=(const Camera&) = delete;
-//
-//   vec3 position;
-//   vec3 target;
-//   vec3 up;
-//
-//   void LookAt();
-// };
 
 }  // namespace wvxy

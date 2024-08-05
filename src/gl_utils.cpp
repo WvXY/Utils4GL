@@ -20,10 +20,11 @@ GlUtils::GlUtils(int screen_width, int screen_height, std::string window_name)
 
 GlUtils::~GlUtils() {
   glfwDestroyWindow(window);
-  // glDeleteVertexArrays(1, &VAO);
-  // glDeleteBuffers(1, &VBO);
-  // glDeleteBuffers(1, &EBO);
-  // glDeleteBuffers(1, &CBO);
+  glDeleteVertexArrays(1, &VAO);
+  glDeleteBuffers(1, &VBO);
+  glDeleteBuffers(1, &EBO);
+  glDeleteBuffers(1, &CBO);
+  glDeleteBuffers(1, &TBO);
   glfwTerminate();
 }
 
@@ -150,7 +151,6 @@ GLuint GlUtils::createBuffer(std::vector<vec3>& vertices,
                              std::vector<vec3>& colors,
                              std::vector<vec3i>& indices,
                              std::vector<vec2>& texCoords) {
-  GLuint VBO, VAO, CBO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &CBO);
@@ -169,7 +169,6 @@ GLuint GlUtils::createBuffer(std::vector<vec3>& vertices,
   glEnableVertexAttribArray(1);
 
   if (indices.size() != 0) {
-    GLuint EBO;
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(vec3i),
@@ -177,7 +176,6 @@ GLuint GlUtils::createBuffer(std::vector<vec3>& vertices,
   }
 
   if (texCoords.size() != 0) {
-    GLuint TBO;
     glGenBuffers(1, &TBO);
     glBindBuffer(GL_ARRAY_BUFFER, TBO);
     glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(vec2),
@@ -197,7 +195,7 @@ void GlUtils::draw(std::vector<vec3> vertices,
                    std::vector<vec2> texCoords) {
   basicShader.use();
 
-  auto VAO = createBuffer(vertices, colors, indices, texCoords);
+  VAO = createBuffer(vertices, colors, indices, texCoords);
   glBindVertexArray(VAO);
 
   if (indices.size() == 0)
@@ -217,6 +215,18 @@ void GlUtils::run() {
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
+}
+
+void GlUtils::processInput(GLFWwindow* window) {
+  const float cameraSpeed = 0.1f;  // adjust accordingly
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    camera.position += cameraSpeed * camera.direction();
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    camera.position -= cameraSpeed * camera.direction();
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    camera.position -= camera.cameraRight() * cameraSpeed;
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    camera.position += camera.cameraRight() * cameraSpeed;
 }
 
 }  // namespace wvxy
