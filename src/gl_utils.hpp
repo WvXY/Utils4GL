@@ -28,7 +28,7 @@ class GlUtils {
   Shader basicShader{"../shaders/basic_shader.vert",
                      "../shaders/basic_shader.frag"};
 
-  unsigned int readTexture(const std::string& path);
+  unsigned int loadTexture(const std::string& path);
 
   void draw(std::vector<vec3> vertices, std::vector<vec3> colors,
             std::vector<vec3i> indices = {}, std::vector<vec2> texCoords = {});
@@ -45,6 +45,7 @@ class GlUtils {
   GLFWwindow* initGLFW();
   void initGLAD();
   void initViewport();
+  static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 
   std::string windowName;
 

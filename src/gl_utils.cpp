@@ -34,10 +34,6 @@ void GlUtils::init() {
   glfwSwapInterval(0);  // vsync : 0 off, 1 on
 }
 
-void FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
-  glViewport(0, 0, width, height);
-}
-
 void GlUtils::setTitle(std::string newTitle) {
   windowName = newTitle;
   glfwSetWindowTitle(window, windowName.c_str());
@@ -52,6 +48,11 @@ void GlUtils::setWireframeMode(bool wireframeMode) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   else  // wireframe
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+}
+
+void GlUtils::framebufferSizeCallback(GLFWwindow* window, int width,
+                                      int height) {
+  glViewport(0, 0, width, height);
 }
 
 GLFWwindow* GlUtils::initGLFW() {
@@ -74,7 +75,7 @@ GLFWwindow* GlUtils::initGLFW() {
   }
 
   glfwMakeContextCurrent(window);
-  glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
+  glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
   return window;
 }
@@ -115,7 +116,7 @@ void GlUtils::initViewport() { glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT); }
 //  glBindVertexArray(0);
 //}
 
-unsigned int GlUtils::readTexture(const std::string& path) {
+unsigned int GlUtils::loadTexture(const std::string& path) {
   unsigned int texture;
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);

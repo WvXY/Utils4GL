@@ -5,8 +5,8 @@
 namespace wvxy {
 
 Shader::Shader(std::string vertexPath, std::string fragmentPath)
-    : vertexCode{readShaderSource(std::move(vertexPath))},
-      fragmentCode{readShaderSource(std::move(fragmentPath))} {
+    : vertexCode{loadShaderSource(std::move(vertexPath))},
+      fragmentCode{loadShaderSource(std::move(fragmentPath))} {
   // it seems it cannot be created before glut init.
   // CreateProgram(vertexCode, fragmentCode);
 }
@@ -34,7 +34,7 @@ void Shader::setFloat(const std::string& name, float value) const {
 }
 
 // https://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
-std::string Shader::readShaderSource(const std::string path) {
+std::string Shader::loadShaderSource(const std::string path) {
   std::ifstream file{path};
 
   if (!file.is_open()) {

@@ -21,7 +21,7 @@ int main() {
   std::vector<vec3i> indices = {{0, 1, 2}, {0, 1, 3}};
   std::vector<vec2> texCoords = {
       {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}};
-  auto go = std::make_unique<GameObject>(vertices, colors, indices);
+  auto go = std::make_unique<wvxy::GameObject>(vertices, colors, indices);
 
   std::vector<vec3> vertices2 = {{0.0f, 0.8f, 0.f},
                                  {0.5f, -0.4f, 0.f},
@@ -42,7 +42,7 @@ int main() {
   auto* window = app.window;
 
   // TODO add functions to manage all the texture stuff
-  auto tex0 = app.readTexture("../../assets/wall.jpg");
+  auto tex0 = app.loadTexture("../../assets/wall.jpg");
   glUniform1i(glGetUniformLocation(app.basicShader.getID(), "tex0"), 0);
 
   while (!glfwWindowShouldClose(window)) {

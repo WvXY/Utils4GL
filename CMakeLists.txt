@@ -9,7 +9,7 @@ set(EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
 # https://github.com/tinyobjloader/tinyobjloader/blob/release/CMakeLists.txt
 set(tinyobjloader-Source ${EXT_DIR}/tiny_obj_loader.h)
 
-file(GLOB SRC
+file(GLOB SRC_FILES
         ${SRC_DIR}/*.cpp
         ${SRC_DIR}/*.hpp
         ${SRC_DIR}/*.h

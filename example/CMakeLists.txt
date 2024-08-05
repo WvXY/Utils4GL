@@ -8,12 +8,9 @@ find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
 add_executable(${PROJECT_NAME}
-        ${SRC}
-        ${tinyobjloader-Source}
+        ${SRC_FILES}
         ${EXTERNAL_LIB}
-        gl_triangle.cpp
-        ../src/shader.cpp
-        ../src/shader.hpp
+        main.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

@@ -2,6 +2,8 @@
 
 #include "global_alias.h"
 
+namespace wvxy {
+
 struct GameObject {
  public:
   GameObject(std::vector<vec3> vertices, std::vector<vec3> colors,
@@ -21,3 +23,5 @@ struct GameObject {
 
   void draw();
 };
+
+}
