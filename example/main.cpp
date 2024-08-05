@@ -74,8 +74,6 @@ int main() {
     glApp.basicShader.setMat4("view", camera.view());
 
     for (unsigned int i = 0; i < 24; i++) {
-      // calculate the model matrix for each object and pass it to shader before
-      // drawing
       glm::mat4 model = glm::mat4(1.0f);
       model = glm::translate(model, cubePositions[i]);
       float angle = 20.0f * i;
