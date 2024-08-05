@@ -11,7 +11,9 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath)
   // CreateProgram(vertexCode, fragmentCode);
 }
 
-Shader::~Shader() { glDeleteProgram(ID); }
+Shader::~Shader() {
+  glDeleteProgram(ID);
+}
 
 void Shader::use() {
   if (!isCompiled) {

@@ -50,7 +50,8 @@ void GlUtils::setWireframeMode(bool wireframeMode) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
-void GlUtils::framebufferSizeCallback(GLFWwindow* window, int width,
+void GlUtils::framebufferSizeCallback(GLFWwindow* window,
+                                      int width,
                                       int height) {
   glViewport(0, 0, width, height);
 }
@@ -87,7 +88,9 @@ void GlUtils::initGLAD() {
   }
 }
 
-void GlUtils::initViewport() { glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT); }
+void GlUtils::initViewport() {
+  glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+}
 
 // another approach to create buffer
 // void GlUtils::CreateBuffer(std::vector<vec2>& vertices,
@@ -188,8 +191,10 @@ GLuint GlUtils::createBuffer(std::vector<vec3>& vertices,
   return VAO;
 }
 
-void GlUtils::draw(std::vector<vec3> vertices, std::vector<vec3> colors,
-                   std::vector<vec3i> indices, std::vector<vec2> texCoords) {
+void GlUtils::draw(std::vector<vec3> vertices,
+                   std::vector<vec3> colors,
+                   std::vector<vec3i> indices,
+                   std::vector<vec2> texCoords) {
   basicShader.use();
 
   auto VAO = createBuffer(vertices, colors, indices, texCoords);

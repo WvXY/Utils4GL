@@ -1,8 +1,8 @@
 ---
-BasedOnStyle: Google
+BasedOnStyle: Chromium
 Language: Cpp
 Standard: Latest
-IndentWidth: 2
-PointerAlignment: Left
+#IndentWidth: 2
+#PointerAlignment: Left
 SortIncludes: Never
 ...

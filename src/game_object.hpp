@@ -6,7 +6,8 @@ namespace wvxy {
 
 struct GameObject {
  public:
-  GameObject(std::vector<vec3> vertices, std::vector<vec3> colors,
+  GameObject(std::vector<vec3> vertices,
+             std::vector<vec3> colors,
              std::vector<vec3i> indices)
       : vertices{vertices}, colors{colors}, indices{indices} {
     hasIndices = true;
@@ -24,4 +25,4 @@ struct GameObject {
   void draw();
 };
 
-}
+}  // namespace wvxy

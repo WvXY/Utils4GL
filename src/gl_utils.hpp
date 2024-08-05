@@ -15,7 +15,8 @@ namespace wvxy {
 
 class GlUtils {
  public:
-  GlUtils(int screen_width, int screen_height,
+  GlUtils(int screen_width,
+          int screen_height,
           std::string windowName = "OpenGL Window");
   ~GlUtils();
   GlUtils(const GlUtils&) = delete;
@@ -30,8 +31,10 @@ class GlUtils {
 
   unsigned int loadTexture(const std::string& path);
 
-  void draw(std::vector<vec3> vertices, std::vector<vec3> colors,
-            std::vector<vec3i> indices = {}, std::vector<vec2> texCoords = {});
+  void draw(std::vector<vec3> vertices,
+            std::vector<vec3> colors,
+            std::vector<vec3i> indices = {},
+            std::vector<vec2> texCoords = {});
 
   void setTitle(std::string newTitle);
   void addInfoToTitle(std::string extraInfo);
@@ -45,11 +48,14 @@ class GlUtils {
   GLFWwindow* initGLFW();
   void initGLAD();
   void initViewport();
-  static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+  static void framebufferSizeCallback(GLFWwindow* window,
+                                      int width,
+                                      int height);
 
   std::string windowName;
 
-  GLuint createBuffer(std::vector<vec3>& vertices, std::vector<vec3>& colors,
+  GLuint createBuffer(std::vector<vec3>& vertices,
+                      std::vector<vec3>& colors,
                       std::vector<vec3i>& indices,
                       std::vector<vec2>& texCoords);
   // GLuint createBuffer(std::vector<vec3>& vertices, std::vector<vec3>&
