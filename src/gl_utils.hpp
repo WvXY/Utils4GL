@@ -26,8 +26,8 @@ class GlUtils {
   int SCR_HEIGHT = 600;
   GLFWwindow* window;
 
-  Shader basicShader{"../shaders/basic_shader.vert",
-                     "../shaders/basic_shader.frag"};
+  Shader basicShader{"../../shaders/basic_shader.vert",
+                     "../../shaders/basic_shader.frag"};
 
   unsigned int loadTexture(const std::string& path);
 

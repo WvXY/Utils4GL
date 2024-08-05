@@ -7,6 +7,10 @@
 #include "global_alias.h"
 #include "game_object.hpp"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 int main() {
   std::vector<vec3> v0 = {{0.0f, 0.5f, 0.f},
                           {0.5f, -0.5f, 0.f},
@@ -43,13 +47,25 @@ int main() {
   auto tex0 = glApp.loadTexture("../../assets/wall.jpg");
   glUniform1i(glGetUniformLocation(glApp.basicShader.getID(), "tex0"), 0);
 
+  /*------------------------Loop-------------------------*/
   while (!glfwWindowShouldClose(window)) {
-    glClearColor(0.4f, 0.6f, 0.1f, 1.f);
+    glClearColor(0.4f, 0.3f, 0.1f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    // transform
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+    trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+    unsigned int transformLoc =
+        glGetUniformLocation(glApp.basicShader.getID(), "transform");
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE,
+                       glm::value_ptr(trans));
+
+    // texture
     glActiveTexture(GL_TEXTURE);
     glBindTexture(GL_TEXTURE_2D, tex0);
 
+    // draw
     glApp.draw(v0, c0, i0, tc0);
     glApp.draw(v1, c1, i1);
 
