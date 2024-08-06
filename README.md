@@ -1,4 +1,4 @@
 # My OpenGL Utility 
 
 ### TODO
-- [ ] Solve memory leak problem
+- [x] Solve memory leak problem

@@ -194,10 +194,12 @@ unsigned int GlUtils::loadTexture(const std::string& path) {
 }
 
 // TODO separate into basicShader and textureShader
-GLuint GlUtils::createBuffer(std::vector<vec3>& vertices,
-                             std::vector<vec3>& colors,
-                             std::vector<vec3i>& indices,
-                             std::vector<vec2>& texCoords) {
+void GlUtils::createBuffer(std::vector<vec3> vertices,
+                             std::vector<vec3> colors,
+                             std::vector<vec3i> indices,
+                             std::vector<vec2> texCoords
+                             ) {
+  verticesSize += vertices.size();
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &CBO);
@@ -216,6 +218,7 @@ GLuint GlUtils::createBuffer(std::vector<vec3>& vertices,
   glEnableVertexAttribArray(1);
 
   if (indices.size() != 0) {
+    indicesSize = indices.size();
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(vec3i),
@@ -233,24 +236,27 @@ GLuint GlUtils::createBuffer(std::vector<vec3>& vertices,
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
-  return VAO;
 }
 
-void GlUtils::draw(std::vector<vec3> vertices,
-                   std::vector<vec3> colors,
-                   std::vector<vec3i> indices,
-                   std::vector<vec2> texCoords) {
+void GlUtils::draw() {
   basicShader.use();
 
-  VAO = createBuffer(vertices, colors, indices, texCoords);
   glBindVertexArray(VAO);
 
-  if (indices.size() == 0)
-    glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size());
+  if (indicesSize == 0)
+    glDrawArrays(GL_TRIANGLE_FAN, 0, verticesSize);
   else
-    glDrawElements(GL_TRIANGLES, indices.size() * 3, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, indicesSize * 3, GL_UNSIGNED_INT, nullptr);
 
   glBindVertexArray(0);
+}
+
+void GlUtils::releaseBuffers() const {
+  glDeleteVertexArrays(1, &VAO);
+  glDeleteBuffers(1, &VBO);
+  glDeleteBuffers(1, &EBO);
+  glDeleteBuffers(1, &CBO);
+  glDeleteBuffers(1, &TBO);
 }
 
 void GlUtils::run() {

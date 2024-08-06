@@ -61,7 +61,7 @@ int main() {
   /*------------------------Loop-------------------------*/
   while (!glfwWindowShouldClose(window)) {
     glClearColor(0.2f, 0.6f, 0.3f, 1.f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glApp.processInput(window);
 
@@ -72,7 +72,9 @@ int main() {
     shader.setMat4("projection", camera.projection());
     glApp.basicShader.setMat4("view", camera.view());
 
-    for (unsigned int i = 0; i < 24; i++) {
+    glApp.createBuffer(v0, c0, i0, tc0);
+    for (unsigned int i = 0; i < 100; i++) {
+
       glm::mat4 model = glm::mat4(1.0f);
       model = glm::translate(model, cubePositions[i]);
       float angle = 20.0f * i;
@@ -80,8 +82,22 @@ int main() {
           glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
       glApp.basicShader.setMat4("model", model);
 
-      glApp.draw(v0, c0, i0, tc0);
+      glApp.draw();
     }
+    glApp.releaseBuffers();
+
+    glApp.createBuffer(v1, c1, i1);
+    for (unsigned int i = 0; i < 20; i++) {
+      glm::mat4 model = glm::mat4(1.0f);
+      model = glm::translate(model, cubePositions[i]);
+      float angle = 20.0f * i;
+      model =
+          glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+      glApp.basicShader.setMat4("model", model);
+
+      glApp.draw();
+    }
+    glApp.releaseBuffers();
 
     glfwPollEvents();
     glfwSwapBuffers(window);

@@ -36,10 +36,14 @@ class GlUtils {
 
   unsigned int loadTexture(const std::string& path);
 
-  void draw(std::vector<vec3> vertices,
-            std::vector<vec3> colors,
-            std::vector<vec3i> indices = {},
-            std::vector<vec2> texCoords = {});
+  void draw();
+  void createBuffer(std::vector<vec3> vertices,
+                    std::vector<vec3> colors,
+                    std::vector<vec3i> indices = {},
+                    std::vector<vec2> texCoords = {});
+
+  void releaseBuffers() const;  // need to release buffers before new creation,
+                                // otherwise it will cause memory leak
 
   void setTitle(std::string newTitle);
   void addInfoToTitle(std::string extraInfo);
@@ -76,12 +80,8 @@ class GlUtils {
   void handleMouseMovement(double xpos, double ypos);
   void handleScroll(double xoffset, double yoffset);
 
-  GLuint createBuffer(std::vector<vec3>& vertices,
-                      std::vector<vec3>& colors,
-                      std::vector<vec3i>& indices,
-                      std::vector<vec2>& texCoords);
-  // GLuint createBuffer(std::vector<vec3>& vertices, std::vector<vec3>&
-  // colors);
+  size_t indicesSize = 0;
+  size_t verticesSize = 0;
 };
 
 }  // namespace wvxy
