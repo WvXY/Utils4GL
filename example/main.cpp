@@ -25,6 +25,7 @@ int main() {
   std::vector<vec2> tc0 = {
       {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}};
   auto go = std::make_unique<wvxy::GameObject>(v0, c0, i0);
+  go->setTexCoords(tc0);
 
   std::vector<vec3> v1 = {{0.0f, 0.8f, 1.f},
                           {0.5f, -0.4f, 2.f},
@@ -36,6 +37,55 @@ int main() {
                           {1.0f, 0.0f, 1.0f}};
   std::vector<vec3i> i1 = {{0, 1, 2}};
 
+  std::vector<vec3> v2 = {
+      {-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f},   {0.5f, -0.5f, -0.5f},
+      {0.0f, 0.0f, -1.0f},   {0.5f, 0.5f, -0.5f},   {0.0f, 0.0f, -1.0f},
+      {0.5f, 0.5f, -0.5f},   {0.0f, 0.0f, -1.0f},   {-0.5f, 0.5f, -0.5f},
+      {0.0f, 0.0f, -1.0f},   {-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f},
+
+      {-0.5f, -0.5f, 0.5f},  {0.0f, 0.0f, 1.0f},    {0.5f, -0.5f, 0.5f},
+      {0.0f, 0.0f, 1.0f},    {0.5f, 0.5f, 0.5f},    {0.0f, 0.0f, 1.0f},
+      {0.5f, 0.5f, 0.5f},    {0.0f, 0.0f, 1.0f},    {-0.5f, 0.5f, 0.5f},
+      {0.0f, 0.0f, 1.0f},    {-0.5f, -0.5f, 0.5f},  {0.0f, 0.0f, 1.0f},
+
+      {-0.5f, 0.5f, 0.5f},   {-1.0f, 0.0f, 0.0f},   {-0.5f, 0.5f, -0.5f},
+      {-1.0f, 0.0f, 0.0f},   {-0.5f, -0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f},
+      {-0.5f, -0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f},   {-0.5f, -0.5f, 0.5f},
+      {-1.0f, 0.0f, 0.0f},   {-0.5f, 0.5f, 0.5f},   {-1.0f, 0.0f, 0.0f},
+
+      {0.5f, 0.5f, 0.5f},    {1.0f, 0.0f, 0.0f},    {0.5f, 0.5f, -0.5f},
+      {1.0f, 0.0f, 0.0f},    {0.5f, -0.5f, -0.5f},  {1.0f, 0.0f, 0.0f},
+      {0.5f, -0.5f, -0.5f},  {1.0f, 0.0f, 0.0f},    {0.5f, -0.5f, 0.5f},
+      {1.0f, 0.0f, 0.0f},    {0.5f, 0.5f, 0.5f},    {1.0f, 0.0f, 0.0f},
+
+      {-0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f},   {0.5f, -0.5f, -0.5f},
+      {0.0f, -1.0f, 0.0f},   {0.5f, -0.5f, 0.5f},   {0.0f, -1.0f, 0.0f},
+      {0.5f, -0.5f, 0.5f},   {0.0f, -1.0f, 0.0f},   {-0.5f, -0.5f, 0.5f},
+      {0.0f, -1.0f, 0.0f},   {-0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f},
+
+      {-0.5f, 0.5f, -0.5f},  {0.0f, 1.0f, 0.0f},    {0.5f, 0.5f, -0.5f},
+      {0.0f, 1.0f, 0.0f},    {0.5f, 0.5f, 0.5f},    {0.0f, 1.0f, 0.0f},
+      {0.5f, 0.5f, 0.5f},    {0.0f, 1.0f, 0.0f},    {-0.5f, 0.5f, 0.5f},
+      {0.0f, 1.0f, 0.0f},    {-0.5f, 0.5f, -0.5f},  {0.0f, 1.0f, 0.0f}};
+
+  std::vector<vec2> tc1 = {
+      {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f},
+      {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f},
+      {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f},
+      {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f},
+      {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f},
+      {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f},
+      {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f},
+      {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f},
+      {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f},
+      {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f},
+
+  };
+
+  auto go1 = std::make_unique<wvxy::GameObject>();
+  go1->fromVerticeNormal(v2);
+  // go1->setTexCoords(tc1);
+
   std::vector<vec3> cubePositions = {
       glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
       glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
@@ -43,12 +93,14 @@ int main() {
       glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
       glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
+  // TODO: separate into an APP class
   // initialize
   auto time_start{std::chrono::high_resolution_clock::now()};
   auto t0 = time_start;
   size_t frame_count{0};
 
-  wvxy::GlUtils glApp{800, 800, "Triangle"};
+  wvxy::GlUtils glApp{800, 800, "GLDEMO"};
+
   auto* window = glApp.window;
   auto& camera = glApp.camera;
   auto& shader = glApp.basicShader;
@@ -64,39 +116,50 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glApp.processInput(window);
+    vec3 lightPos = {sin(glfwGetTime()) * 2.0f, 0.0f, 0.0f};
 
     // texture
     glActiveTexture(GL_TEXTURE);
     glBindTexture(GL_TEXTURE_2D, tex0);
 
     shader.setMat4("projection", camera.projection());
-    glApp.basicShader.setMat4("view", camera.view());
+    shader.setMat4("view", camera.view());
+    shader.setVec3("lightColor", {1.0f, 1.0f, 1.0f});
+    shader.setVec3("lightPos", lightPos);
+    shader.setVec3("viewPos", camera.position);
 
-    glApp.createBuffer(v0, c0, i0, tc0);
-    for (unsigned int i = 0; i < 100; i++) {
+    glApp.createBuffer(*go1);
+    // glApp.draw();
 
-      glm::mat4 model = glm::mat4(1.0f);
-      model = glm::translate(model, cubePositions[i]);
-      float angle = 20.0f * i;
-      model =
-          glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-      glApp.basicShader.setMat4("model", model);
-
-      glApp.draw();
-    }
-    glApp.releaseBuffers();
-
-    glApp.createBuffer(v1, c1, i1);
-    for (unsigned int i = 0; i < 20; i++) {
-      glm::mat4 model = glm::mat4(1.0f);
-      model = glm::translate(model, cubePositions[i]);
-      float angle = 20.0f * i;
-      model =
-          glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-      glApp.basicShader.setMat4("model", model);
-
-      glApp.draw();
-    }
+    // glApp.createBuffer(v0, c0, i0, tc0);
+    // for (unsigned int i = 0; i < 100; i++) {
+    //
+    //   glm::mat4 model = glm::mat4(1.0f);
+    //   model = glm::translate(model, cubePositions[i]);
+    //   float angle = 20.0f * i;
+    //   model =
+    //       glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f,
+    //       0.5f));
+    //   glApp.basicShader.setMat4("model", model);
+    //
+    //   glApp.draw();
+    // }
+    // glApp.releaseBuffers();
+    //
+    // glApp.createBuffer(v1, c1, i1);
+    // for (unsigned int i = 0; i < 20; i++) {
+    //   glm::mat4 model = glm::mat4(1.0f);
+    //   model = glm::translate(model, cubePositions[i]);
+    //   float angle = 20.0f * i;
+    //   model =
+    //       glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f,
+    //       0.5f));
+    //   glApp.basicShader.setMat4("model", model);
+    //
+    //   glApp.draw();
+    // }
+    shader.setMat4("model", go1->model);
+    glApp.draw();
     glApp.releaseBuffers();
 
     glfwPollEvents();
