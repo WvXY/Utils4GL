@@ -11,6 +11,7 @@
 #include "global_alias.h"
 #include "shader.hpp"
 #include "camera.hpp"
+#include "game_object.hpp"
 
 #include <glm/ext/matrix_transform.hpp>
 
@@ -40,7 +41,9 @@ class GlUtils {
   void createBuffer(std::vector<vec3> vertices,
                     std::vector<vec3> colors,
                     std::vector<vec3i> indices = {},
-                    std::vector<vec2> texCoords = {});
+                    std::vector<vec2> texCoords = {},
+                    std::vector<vec3> normals = {});
+  void createBuffer(GameObject& go);
 
   void releaseBuffers() const;  // need to release buffers before new creation,
                                 // otherwise it will cause memory leak
@@ -63,7 +66,7 @@ class GlUtils {
   void initViewport();
 
   std::string windowName;
-  GLuint VAO, VBO, EBO, CBO, TBO;
+  GLuint VAO, VBO, EBO, CBO, TBO, NBO;
 
   // camera
   bool firstMouse{true};

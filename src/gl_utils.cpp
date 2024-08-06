@@ -197,7 +197,8 @@ unsigned int GlUtils::loadTexture(const std::string& path) {
 void GlUtils::createBuffer(std::vector<vec3> vertices,
                              std::vector<vec3> colors,
                              std::vector<vec3i> indices,
-                             std::vector<vec2> texCoords
+                             std::vector<vec2> texCoords,
+                             std::vector<vec3> normals
                              ) {
   verticesSize += vertices.size();
   glGenVertexArrays(1, &VAO);
@@ -211,6 +212,9 @@ void GlUtils::createBuffer(std::vector<vec3> vertices,
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)0);
   glEnableVertexAttribArray(0);
 
+  if (colors.size() == 0) {
+    colors = std::vector<vec3>(vertices.size(), {1.0f, 1.0f, 1.0f});
+  }
   glBindBuffer(GL_ARRAY_BUFFER, CBO);
   glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(vec3), colors.data(),
                GL_STATIC_DRAW);
@@ -234,8 +238,21 @@ void GlUtils::createBuffer(std::vector<vec3> vertices,
     glEnableVertexAttribArray(2);
   }
 
+  if (normals.size() != 0) {
+    glGenBuffers(1, &NBO);
+    glBindBuffer(GL_ARRAY_BUFFER, NBO);
+    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(vec3), normals.data(),
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)0);
+    glEnableVertexAttribArray(3);
+  }
+
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
+}
+
+void GlUtils::createBuffer(GameObject& go) {
+  createBuffer(go.vertices, go.colors, go.indices, go.texCoords, go.normals);
 }
 
 void GlUtils::draw() {
@@ -244,7 +261,7 @@ void GlUtils::draw() {
   glBindVertexArray(VAO);
 
   if (indicesSize == 0)
-    glDrawArrays(GL_TRIANGLE_FAN, 0, verticesSize);
+    glDrawArrays(GL_TRIANGLES, 0, verticesSize);
   else
     glDrawElements(GL_TRIANGLES, indicesSize * 3, GL_UNSIGNED_INT, nullptr);
 
