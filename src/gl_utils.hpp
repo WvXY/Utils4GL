@@ -16,15 +16,15 @@
 #include <glm/ext/matrix_transform.hpp>
 
 namespace wvxy {
-
-class GlUtils {
+namespace GlUtils {
+class ExampleApp {
  public:
-  GlUtils(int screen_width,
-          int screen_height,
-          std::string windowName = "OpenGL Window");
-  ~GlUtils();
-  GlUtils(const GlUtils&) = delete;
-  GlUtils& operator=(const GlUtils&) = delete;
+  ExampleApp(int screen_width,
+             int screen_height,
+             std::string windowName = "OpenGL Window");
+  ~ExampleApp();
+  ExampleApp(const ExampleApp&) = delete;
+  ExampleApp& operator=(const ExampleApp&) = delete;
 
   int SCR_WIDTH = 800;
   int SCR_HEIGHT = 600;
@@ -46,7 +46,7 @@ class GlUtils {
   void createBuffer(GameObject& go);
 
   void releaseBuffers() const;  // need to release buffers before new creation,
-                                // otherwise it will cause memory leak
+  // otherwise it will cause memory leak
 
   void setTitle(std::string newTitle);
   void addInfoToTitle(std::string extraInfo);
@@ -86,5 +86,5 @@ class GlUtils {
   size_t indicesSize = 0;
   size_t verticesSize = 0;
 };
-
+}  // namespace GlUtils
 }  // namespace wvxy

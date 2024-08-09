@@ -5,7 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace wvxy {
-
+namespace GlUtils {
 Shader::Shader(std::string vertexPath, std::string fragmentPath)
     : vertexCode{loadShaderSource(std::move(vertexPath))},
       fragmentCode{loadShaderSource(std::move(fragmentPath))} {
@@ -38,7 +38,8 @@ void Shader::setFloat(const std::string& name, float value) const {
 }
 
 void Shader::setVec3(const std::string& name, vec3 value) const {
-  glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(value));
+  glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1,
+               glm::value_ptr(value));
 }
 
 void Shader::setMat4(const std::string& name, mat4 value) const {
@@ -100,5 +101,6 @@ void Shader::createProgram(std::string& vertexCode, std::string& fragmentCode) {
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 }
+}  // namespace GlUtils
 
 }  // namespace wvxy

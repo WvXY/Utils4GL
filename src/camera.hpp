@@ -5,9 +5,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace wvxy {
-
+namespace GlUtils {
 class Camera {
- public:
+public:
   Camera() = default;
   Camera(vec3 position, vec3 front, vec3 up)
       : position(position), front(front), up(up) {}
@@ -70,7 +70,7 @@ class Camera {
       fov = 120.0f;
   }
 
- private:
+private:
   mat4 perspective() {
     return glm::perspective(
         glm::radians(fov),
@@ -96,5 +96,5 @@ class Camera {
   const float speed = 0.5f;
   const vec3 worldUp{0.0f, 1.0f, 0.0f};
 };
-
+}
 }  // namespace wvxy

@@ -5,7 +5,7 @@
 #include "global_alias.h"
 
 namespace wvxy {
-
+namespace GlUtils {
 struct GameObject {
  public:
   GameObject() = default;
@@ -47,13 +47,16 @@ struct GameObject {
 
   // a temporary solution for the current project
   void fromVerticeNormal(std::vector<vec3> data) {
-        for (int i = 0; i < data.size(); i += 2) {
-          vertices.push_back(data[i]);
-          normals.push_back(data[i + 1]);
-        }
+    for (int i = 0; i < data.size(); i += 2) {
+      // for (int i = data.size(); i >= 0; i -= 2) {
+      vertices.push_back(data[i]);
+      normals.push_back(data[i + 1]);
+    }
   }
 
   void draw();
 };
+
+}  // namespace GlUtils
 
 }  // namespace wvxy

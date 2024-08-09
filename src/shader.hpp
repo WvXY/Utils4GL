@@ -10,8 +10,9 @@
 #include "global_alias.h"
 
 namespace wvxy {
+namespace GlUtils {
 class Shader {
- public:
+public:
   Shader(std::string vertexPath, std::string fragmentPath);
   ~Shader();
 
@@ -28,7 +29,7 @@ class Shader {
   //   CreateProgram(vertexCode, fragmentCode);
   // }
 
- private:
+private:
   unsigned int ID;
   bool isCompiled = false;  // Temp solution
   std::string vertexCode;
@@ -38,5 +39,6 @@ class Shader {
   void compileShader(std::string& source, GLuint& target, GLenum type);
   void createProgram(std::string& vertexCode, std::string& fragmentCode);
 };
+}
 
 }  // namespace wvxy

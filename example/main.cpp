@@ -24,7 +24,7 @@ int main() {
   std::vector<vec3i> i0 = {{0, 1, 2}, {0, 1, 3}};
   std::vector<vec2> tc0 = {
       {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}};
-  auto go = std::make_unique<wvxy::GameObject>(v0, c0, i0);
+  auto go = std::make_unique<wvxy::GlUtils::GameObject>(v0, c0, i0);
   go->setTexCoords(tc0);
 
   std::vector<vec3> v1 = {{0.0f, 0.8f, 1.f},
@@ -79,10 +79,9 @@ int main() {
       {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f},
       {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f},
       {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f},
-
   };
 
-  auto go1 = std::make_unique<wvxy::GameObject>();
+  auto go1 = std::make_unique<wvxy::GlUtils::GameObject>();
   go1->fromVerticeNormal(v2);
   // go1->setTexCoords(tc1);
 
@@ -99,7 +98,7 @@ int main() {
   auto t0 = time_start;
   size_t frame_count{0};
 
-  wvxy::GlUtils glApp{800, 800, "GLDEMO"};
+  wvxy::GlUtils::ExampleApp glApp{800, 800, "GLDEMO"};
 
   auto* window = glApp.window;
   auto& camera = glApp.camera;
@@ -118,9 +117,9 @@ int main() {
     glApp.processInput(window);
     vec3 lightPos = {sin(glfwGetTime()) * 2.0f, 0.0f, 0.0f};
 
-    // texture
-    glActiveTexture(GL_TEXTURE);
-    glBindTexture(GL_TEXTURE_2D, tex0);
+    // // texture
+    // glActiveTexture(GL_TEXTURE);
+    // glBindTexture(GL_TEXTURE_2D, tex0);
 
     shader.setMat4("projection", camera.projection());
     shader.setMat4("view", camera.view());
@@ -159,6 +158,7 @@ int main() {
     //   glApp.draw();
     // }
     shader.setMat4("model", go1->model);
+
     glApp.draw();
     glApp.releaseBuffers();
 
