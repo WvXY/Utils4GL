@@ -45,13 +45,10 @@ struct GameObject {
     this->normals = std::move(normals);
   }
 
-  // a temporary solution for the current project
-  void fromVerticeNormal(std::vector<vec3> data) {
-    for (int i = 0; i < data.size(); i += 2) {
-      // for (int i = data.size(); i >= 0; i -= 2) {
-      vertices.push_back(data[i]);
-      normals.push_back(data[i + 1]);
-    }
+  void setOffset(vec3 offset) {
+    model[3][0] = offset.x;
+    model[3][1] = offset.y;
+    model[3][2] = offset.z;
   }
 
   void draw();

@@ -63,7 +63,7 @@ public:
 
   void processMouseScroll(float yoffset) {
     if (fov >= 10.0f && fov <= 120.0f)
-      fov -= yoffset;
+      fov -= yoffset * 1.2f;
     if (fov <= 10.0f)
       fov = 10.0f;
     if (fov >= 120.0f)
@@ -75,10 +75,10 @@ private:
     return glm::perspective(
         glm::radians(fov),
         static_cast<float>(screenWidth) / static_cast<float>(screenHeight),
-        0.1f, 100.0f);
+        0.001f, 100.0f);
   }
   mat4 ortho() {
-    return glm::ortho(0.0f, 800.0f, 0.0f, 800.0f, 0.001f, 100.0f);
+    return glm::ortho(0.0f, 800.0f, 0.0f, 800.0f, 0.01f, 100.0f);
   }
 
   void updateCameraVectors() {
@@ -92,8 +92,8 @@ private:
   unsigned int screenWidth = 800;
   unsigned int screenHeight = 800;
 
-  const float sensitivity = 0.3f;
-  const float speed = 0.5f;
+  const float sensitivity = 0.2f;
+  const float speed = 0.8f;
   const vec3 worldUp{0.0f, 1.0f, 0.0f};
 };
 }

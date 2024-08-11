@@ -35,6 +35,7 @@ void ExampleApp::init() {
   initGLAD();
   initViewport();
   glfwSwapInterval(0);  // vsync : 0 off, 1 on
+  glEnable(GL_DEPTH_TEST);
 }
 
 void ExampleApp::setTitle(std::string newTitle) {
@@ -92,15 +93,6 @@ void ExampleApp::scrollCallback(GLFWwindow* window,
     instance->camera.processMouseScroll(static_cast<float>(yoffset));
   }
 }
-
-// void GlUtils::handleScroll(double xoffset, double yoffset) {
-//   if (camera.fov >= 1.0f && camera.fov <= 45.0f)
-//     camera.fov -= yoffset;
-//   if (camera.fov <= 1.0f)
-//     camera.fov = 1.0f;
-//   if (camera.fov >= 45.0f)
-//     camera.fov = 45.0f;
-// }
 
 GLFWwindow* ExampleApp::initGLFW() {
   if (!glfwInit()) {

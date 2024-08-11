@@ -12,85 +12,128 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+using namespace wvxy;
+
 int main() {
-  std::vector<vec3> v0 = {{0.0f, 0.5f, 1.f},
-                          {0.5f, -0.5f, 3.f},
-                          {-0.5f, -0.5f, 2.f},
-                          {0.2f, 0.4f, 0.f}};
-  std::vector<vec3> c0 = {{1.0f, 1.0f, 1.0f},
-                          {0.0f, 1.0f, 1.0f},
-                          {0.0f, 0.0f, 1.0f},
-                          {1.0f, 0.0f, 1.0f}};
-  std::vector<vec3i> i0 = {{0, 1, 2}, {0, 1, 3}};
-  std::vector<vec2> tc0 = {
-      {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}};
-  auto go = std::make_unique<wvxy::GlUtils::GameObject>(v0, c0, i0);
-  go->setTexCoords(tc0);
+  std::vector<vec3> vertices = {// Front face
+                                {-0.5f, -0.5f, -0.5f},
+                                {0.5f, -0.5f, -0.5f},
+                                {0.5f, 0.5f, -0.5f},
+                                {0.5f, 0.5f, -0.5f},
+                                {-0.5f, 0.5f, -0.5f},
+                                {-0.5f, -0.5f, -0.5f},
 
-  std::vector<vec3> v1 = {{0.0f, 0.8f, 1.f},
-                          {0.5f, -0.4f, 2.f},
-                          {0.5f, 0.5f, 1.f},
-                          {0.2f, 0.4f, 0.f}};
-  std::vector<vec3> c1 = {{1.0f, 0.0f, 0.0f},
-                          {0.0f, 1.0f, 0.0f},
-                          {0.0f, 0.0f, 1.0f},
-                          {1.0f, 0.0f, 1.0f}};
-  std::vector<vec3i> i1 = {{0, 1, 2}};
+                                // Back face
+                                {-0.5f, -0.5f, 0.5f},
+                                {0.5f, -0.5f, 0.5f},
+                                {0.5f, 0.5f, 0.5f},
+                                {0.5f, 0.5f, 0.5f},
+                                {-0.5f, 0.5f, 0.5f},
+                                {-0.5f, -0.5f, 0.5f},
 
-  std::vector<vec3> v2 = {
-      {-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f},   {0.5f, -0.5f, -0.5f},
-      {0.0f, 0.0f, -1.0f},   {0.5f, 0.5f, -0.5f},   {0.0f, 0.0f, -1.0f},
-      {0.5f, 0.5f, -0.5f},   {0.0f, 0.0f, -1.0f},   {-0.5f, 0.5f, -0.5f},
-      {0.0f, 0.0f, -1.0f},   {-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f},
+                                // Left face
+                                {-0.5f, 0.5f, 0.5f},
+                                {-0.5f, 0.5f, -0.5f},
+                                {-0.5f, -0.5f, -0.5f},
+                                {-0.5f, -0.5f, -0.5f},
+                                {-0.5f, -0.5f, 0.5f},
+                                {-0.5f, 0.5f, 0.5f},
 
-      {-0.5f, -0.5f, 0.5f},  {0.0f, 0.0f, 1.0f},    {0.5f, -0.5f, 0.5f},
-      {0.0f, 0.0f, 1.0f},    {0.5f, 0.5f, 0.5f},    {0.0f, 0.0f, 1.0f},
-      {0.5f, 0.5f, 0.5f},    {0.0f, 0.0f, 1.0f},    {-0.5f, 0.5f, 0.5f},
-      {0.0f, 0.0f, 1.0f},    {-0.5f, -0.5f, 0.5f},  {0.0f, 0.0f, 1.0f},
+                                // Right face
+                                {0.5f, 0.5f, 0.5f},
+                                {0.5f, 0.5f, -0.5f},
+                                {0.5f, -0.5f, -0.5f},
+                                {0.5f, -0.5f, -0.5f},
+                                {0.5f, -0.5f, 0.5f},
+                                {0.5f, 0.5f, 0.5f},
 
-      {-0.5f, 0.5f, 0.5f},   {-1.0f, 0.0f, 0.0f},   {-0.5f, 0.5f, -0.5f},
-      {-1.0f, 0.0f, 0.0f},   {-0.5f, -0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f},
-      {-0.5f, -0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f},   {-0.5f, -0.5f, 0.5f},
-      {-1.0f, 0.0f, 0.0f},   {-0.5f, 0.5f, 0.5f},   {-1.0f, 0.0f, 0.0f},
+                                // Bottom face
+                                {-0.5f, -0.5f, -0.5f},
+                                {0.5f, -0.5f, -0.5f},
+                                {0.5f, -0.5f, 0.5f},
+                                {0.5f, -0.5f, 0.5f},
+                                {-0.5f, -0.5f, 0.5f},
+                                {-0.5f, -0.5f, -0.5f},
 
-      {0.5f, 0.5f, 0.5f},    {1.0f, 0.0f, 0.0f},    {0.5f, 0.5f, -0.5f},
-      {1.0f, 0.0f, 0.0f},    {0.5f, -0.5f, -0.5f},  {1.0f, 0.0f, 0.0f},
-      {0.5f, -0.5f, -0.5f},  {1.0f, 0.0f, 0.0f},    {0.5f, -0.5f, 0.5f},
-      {1.0f, 0.0f, 0.0f},    {0.5f, 0.5f, 0.5f},    {1.0f, 0.0f, 0.0f},
+                                // Top face
+                                {-0.5f, 0.5f, -0.5f},
+                                {0.5f, 0.5f, -0.5f},
+                                {0.5f, 0.5f, 0.5f},
+                                {0.5f, 0.5f, 0.5f},
+                                {-0.5f, 0.5f, 0.5f},
+                                {-0.5f, 0.5f, -0.5f}};
 
-      {-0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f},   {0.5f, -0.5f, -0.5f},
-      {0.0f, -1.0f, 0.0f},   {0.5f, -0.5f, 0.5f},   {0.0f, -1.0f, 0.0f},
-      {0.5f, -0.5f, 0.5f},   {0.0f, -1.0f, 0.0f},   {-0.5f, -0.5f, 0.5f},
-      {0.0f, -1.0f, 0.0f},   {-0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f},
+  std::vector<vec3> normals = {// Front face normals
+                               {0.0f, 0.0f, -1.0f},
+                               {0.0f, 0.0f, -1.0f},
+                               {0.0f, 0.0f, -1.0f},
+                               {0.0f, 0.0f, -1.0f},
+                               {0.0f, 0.0f, -1.0f},
+                               {0.0f, 0.0f, -1.0f},
 
-      {-0.5f, 0.5f, -0.5f},  {0.0f, 1.0f, 0.0f},    {0.5f, 0.5f, -0.5f},
-      {0.0f, 1.0f, 0.0f},    {0.5f, 0.5f, 0.5f},    {0.0f, 1.0f, 0.0f},
-      {0.5f, 0.5f, 0.5f},    {0.0f, 1.0f, 0.0f},    {-0.5f, 0.5f, 0.5f},
-      {0.0f, 1.0f, 0.0f},    {-0.5f, 0.5f, -0.5f},  {0.0f, 1.0f, 0.0f}};
+                               // Back face normals
+                               {0.0f, 0.0f, 1.0f},
+                               {0.0f, 0.0f, 1.0f},
+                               {0.0f, 0.0f, 1.0f},
+                               {0.0f, 0.0f, 1.0f},
+                               {0.0f, 0.0f, 1.0f},
+                               {0.0f, 0.0f, 1.0f},
 
-  std::vector<vec2> tc1 = {
-      {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f},
-      {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f},
-      {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f},
-      {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f},
-      {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f},
-      {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f},
-      {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f},
-      {0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f},
-      {0.0f, 0.0f}, {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f}, {0.0f, 0.0f},
-      {1.0f, 0.0f}, {0.5f, 1.0f}, {0.5f, 0.5f},
-  };
+                               // Left face normals
+                               {-1.0f, 0.0f, 0.0f},
+                               {-1.0f, 0.0f, 0.0f},
+                               {-1.0f, 0.0f, 0.0f},
+                               {-1.0f, 0.0f, 0.0f},
+                               {-1.0f, 0.0f, 0.0f},
+                               {-1.0f, 0.0f, 0.0f},
 
-  auto go1 = std::make_unique<wvxy::GlUtils::GameObject>();
-  go1->fromVerticeNormal(v2);
-  // go1->setTexCoords(tc1);
+                               // Right face normals
+                               {1.0f, 0.0f, 0.0f},
+                               {1.0f, 0.0f, 0.0f},
+                               {1.0f, 0.0f, 0.0f},
+                               {1.0f, 0.0f, 0.0f},
+                               {1.0f, 0.0f, 0.0f},
+                               {1.0f, 0.0f, 0.0f},
 
-  std::vector<vec3> cubePositions = {
-      glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
-      glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
-      glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
-      glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
-      glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
+                               // Bottom face normals
+                               {0.0f, -1.0f, 0.0f},
+                               {0.0f, -1.0f, 0.0f},
+                               {0.0f, -1.0f, 0.0f},
+                               {0.0f, -1.0f, 0.0f},
+                               {0.0f, -1.0f, 0.0f},
+                               {0.0f, -1.0f, 0.0f},
+
+                               // Top face normals
+                               {0.0f, 1.0f, 0.0f},
+                               {0.0f, 1.0f, 0.0f},
+                               {0.0f, 1.0f, 0.0f},
+                               {0.0f, 1.0f, 0.0f},
+                               {0.0f, 1.0f, 0.0f},
+                               {0.0f, 1.0f, 0.0f}};
+
+  auto go1 = std::make_unique<GlUtils::GameObject>();
+  go1->setVertices(vertices);
+  go1->setNormals(normals);
+
+  std::vector<vec3> groundVertices = {// Triangle 1
+                                      {-100.0f, -1.0f, -100.0f},
+                                      {100.0f, -1.0f, -100.0f},
+                                      {100.0f, -1.0f, 100.0f},
+
+                                      // Triangle 2
+                                      {100.0f, -1.0f, 100.0f},
+                                      {-100.0f, -1.0f, 100.0f},
+                                      {-100.0f, -1.0f, -100.0f}};
+
+  std::vector<vec3> groundNormals = {// Normals for both triangles (since it's
+                                     // flat, they all have the same normal)
+                                     {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f},
+                                     {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f},
+                                     {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}};
+
+  auto groundObject = std::make_unique<GlUtils::GameObject>();
+  groundObject->setVertices(groundVertices);
+  groundObject->setNormals(groundNormals);
 
   // TODO: separate into an APP class
   // initialize
@@ -98,7 +141,8 @@ int main() {
   auto t0 = time_start;
   size_t frame_count{0};
 
-  wvxy::GlUtils::ExampleApp glApp{800, 800, "GLDEMO"};
+  GlUtils::ExampleApp glApp{800, 800, "GLDEMO"};
+  // glApp.setWireframeMode(true);
 
   auto* window = glApp.window;
   auto& camera = glApp.camera;
@@ -111,11 +155,11 @@ int main() {
 
   /*------------------------Loop-------------------------*/
   while (!glfwWindowShouldClose(window)) {
-    glClearColor(0.2f, 0.6f, 0.3f, 1.f);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glApp.processInput(window);
-    vec3 lightPos = {sin(glfwGetTime()) * 2.0f, 0.0f, 0.0f};
+    vec3 lightPos = {sin(glfwGetTime()), 2.f, cos(glfwGetTime())};
 
     // // texture
     // glActiveTexture(GL_TEXTURE);
@@ -128,42 +172,23 @@ int main() {
     shader.setVec3("viewPos", camera.position);
 
     glApp.createBuffer(*go1);
-    // glApp.draw();
-
-    // glApp.createBuffer(v0, c0, i0, tc0);
-    // for (unsigned int i = 0; i < 100; i++) {
-    //
-    //   glm::mat4 model = glm::mat4(1.0f);
-    //   model = glm::translate(model, cubePositions[i]);
-    //   float angle = 20.0f * i;
-    //   model =
-    //       glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f,
-    //       0.5f));
-    //   glApp.basicShader.setMat4("model", model);
-    //
-    //   glApp.draw();
-    // }
-    // glApp.releaseBuffers();
-    //
-    // glApp.createBuffer(v1, c1, i1);
-    // for (unsigned int i = 0; i < 20; i++) {
-    //   glm::mat4 model = glm::mat4(1.0f);
-    //   model = glm::translate(model, cubePositions[i]);
-    //   float angle = 20.0f * i;
-    //   model =
-    //       glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f,
-    //       0.5f));
-    //   glApp.basicShader.setMat4("model", model);
-    //
-    //   glApp.draw();
-    // }
     shader.setMat4("model", go1->model);
-
     glApp.draw();
     glApp.releaseBuffers();
 
-    glfwPollEvents();
+    // glApp.createBuffer(*go1);
+    // go1->setOffset(lightPos);
+    // shader.setMat4("model", go1->model);
+    // glApp.draw();
+    // glApp.releaseBuffers();
+
+    glApp.createBuffer(*groundObject);
+    shader.setMat4("model", groundObject->model);
+    glApp.draw();
+    glApp.releaseBuffers();
+
     glfwSwapBuffers(window);
+    glfwPollEvents();
 
     // frame time
     frame_count++;
