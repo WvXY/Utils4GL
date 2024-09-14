@@ -7,7 +7,7 @@ layout(location = 3) in vec3 fragPos;
 
 layout(location = 0) out vec4 outColor;
 
-//uniform sampler2D tex;
+uniform sampler2D tex;
 uniform vec3 viewPos;
 uniform vec3 lightPos;
 uniform vec3 lightColor;

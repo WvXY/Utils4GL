@@ -155,15 +155,15 @@ int main() {
 
   /*------------------------Loop-------------------------*/
   while (!glfwWindowShouldClose(window)) {
-    glClearColor(0.1f, 0.1f, 0.1f, 1.f);
+    glClearColor(0.3f, 0.3f, 0.3f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glApp.processInput(window);
     vec3 lightPos = {sin(glfwGetTime()), 2.f, cos(glfwGetTime())};
 
     // // texture
-    // glActiveTexture(GL_TEXTURE);
-    // glBindTexture(GL_TEXTURE_2D, tex0);
+    glActiveTexture(GL_TEXTURE);
+    glBindTexture(GL_TEXTURE_2D, tex0);
 
     shader.setMat4("projection", camera.projection());
     shader.setMat4("view", camera.view());
@@ -175,12 +175,6 @@ int main() {
     shader.setMat4("model", go1->model);
     glApp.draw();
     glApp.releaseBuffers();
-
-    // glApp.createBuffer(*go1);
-    // go1->setOffset(lightPos);
-    // shader.setMat4("model", go1->model);
-    // glApp.draw();
-    // glApp.releaseBuffers();
 
     glApp.createBuffer(*groundObject);
     shader.setMat4("model", groundObject->model);
